@@ -1,7 +1,7 @@
+import { HomeCard } from '@/components/HomeCard';
+import { homes } from '@/data/sampleData';
 import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { HomeCard } from './components/HomeCard';
-import { homes } from './data/sampleData';
 
 export default function IndexScreen() {
     return (

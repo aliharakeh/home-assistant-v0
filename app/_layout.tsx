@@ -20,12 +20,11 @@ export default function RootLayout() {
                     name="[id]"
                     options={{
                         title: 'Property Details',
-                        headerBackTitle: 'Back',
                     }}
                 />
-                <Stack.Screen name="+not-found" />
+                <Stack.Screen name="edit/[index]" options={{ title: 'Edit Property' }} />
             </Stack>
-            <StatusBar style="dark" />
+            <StatusBar />
         </ThemeProvider>
     );
 }

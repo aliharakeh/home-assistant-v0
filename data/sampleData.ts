@@ -79,3 +79,11 @@ export const homes: Home[] = [
         },
     },
 ];
+
+export const getHomeByIndex = (index: number): Home | undefined => {
+    return homes[index];
+};
+
+export const updateHome = (index: number, updatedHome: Home): void => {
+    homes[index] = updatedHome;
+};

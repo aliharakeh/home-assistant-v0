@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Home } from '../models/models';
 
 interface HomeCardProps {
@@ -15,8 +15,20 @@ export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
         router.push(`/${index}`);
     };
 
+    const handleEditPress = (event: GestureResponderEvent) => {
+        router.push(`/edit/${index}`);
+    };
+
     return (
         <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.7}>
+            <TouchableOpacity
+                style={styles.editButton}
+                onPress={handleEditPress}
+                activeOpacity={0.7}
+            >
+                <Text style={styles.editButtonText}>Edit</Text>
+            </TouchableOpacity>
+
             <Text style={styles.title}>{home.name}</Text>
             <Text style={styles.address}>{home.address}</Text>
 
@@ -66,6 +78,21 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 1.41,
         elevation: 2,
+        position: 'relative',
+    },
+    editButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#eee',
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        borderRadius: 4,
+        zIndex: 1,
+    },
+    editButtonText: {
+        fontSize: 12,
+        color: '#333',
     },
     title: {
         fontSize: 18,
