@@ -1,9 +1,17 @@
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
+    useEffect(() => {
+        SplashScreen.hide();
+    }, []);
+
     return (
         <ThemeProvider value={DefaultTheme}>
             <Stack>
