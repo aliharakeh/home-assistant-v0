@@ -221,13 +221,13 @@ export default function EditHomePage() {
             {shareholderNames.map((shName, i) => (
                 <View key={i} style={styles.shareholderRow}>
                     <TextInput
-                        style={[styles.shareholderInput, { flex: 3 }]}
+                        style={[styles.shareholderInput]}
                         value={shName}
                         onChangeText={text => handleShareholderNameChange(text, i)}
                         placeholder={`Shareholder ${i + 1} Name`}
                     />
                     <TextInput
-                        style={[styles.shareholderInput, { flex: 1, marginLeft: 5 }]}
+                        style={[styles.shareholderInput, styles.sharholderValueInput]}
                         value={shareholderShares[i]}
                         onChangeText={text => handleShareholderShareChange(text, i)}
                         placeholder="Share %"
@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     shareholderInput: {
+        width: '70%',
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
@@ -392,10 +393,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         backgroundColor: 'white',
     },
-    removeButton: {
-        padding: 5,
+    sharholderValueInput: {
+        width: '20%',
         marginLeft: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
+    },
+    removeButton: {
+        width: '10%',
+        padding: 5,
+        marginLeft: 4,
     },
 });
