@@ -1,5 +1,5 @@
-import { getHomeByIndex, updateHome } from '@/data/sampleData';
-import { Home, Rent, Shareholder } from '@/models/models';
+import { addHome, getHomeByIndex, updateHome } from '@/data/sampleData';
+import { Electricity, Home, Rent, Shareholder } from '@/models/models';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -16,72 +16,137 @@ import {
 
 export default function EditHomePage() {
     const { index } = useLocalSearchParams<{ index: string }>();
-    const homeIndex = parseInt(index || '0', 10);
+    const isNewHome = index === 'new';
+    const homeIndex = isNewHome ? -1 : parseInt(index || '0', 10);
 
     const [homeData, setHomeData] = useState<Home | null>(null);
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
-    const [shareholderNames, setShareholderNames] = useState<string[]>([]);
+    const [shareholderNames, setShareholderNames] = useState<string[]>(['']);
+    const [shareholderShares, setShareholderShares] = useState<string[]>(['100']);
     const [tenantName, setTenantName] = useState('');
-    const [rentPrice, setRentPrice] = useState('$');
-    const [rentCurrency, setRentCurrency] = useState('');
-    const [rentDuration, setRentDuration] = useState('');
+    const [rentPrice, setRentPrice] = useState('');
+    const [rentCurrency, setRentCurrency] = useState('USD');
+    const [rentDuration, setRentDuration] = useState('Monthly');
+    const [hasRent, setHasRent] = useState(false);
+    const [electricityAddressCode, setElectricityAddressCode] = useState('');
 
     useEffect(() => {
-        const currentHome = getHomeByIndex(homeIndex);
-        if (currentHome) {
-            setHomeData(currentHome);
-            setName(currentHome.name);
-            setAddress(currentHome.address);
-            setShareholderNames(currentHome.shareholders.map(s => s.name));
-            if (currentHome.rent) {
-                setTenantName(currentHome.rent.tenant.name);
-                setRentPrice(currentHome.rent.price.amount.toString());
-                setRentCurrency(currentHome.rent.price.currency);
-                setRentDuration(currentHome.rent.rentPaymentDuration);
-            }
+        if (isNewHome) {
+            // Initialize with empty data for a new home
+            setHomeData({
+                name: '',
+                address: '',
+                shareholders: [{ name: '', shareValue: 100 }],
+                electricity: {
+                    addressCode: '',
+                    bills: [],
+                },
+            });
         } else {
-            Alert.alert('Error', 'Home data not found.', [
-                { text: 'OK', onPress: () => router.back() },
-            ]);
+            // Load existing home data
+            const currentHome = getHomeByIndex(homeIndex);
+            if (currentHome) {
+                setHomeData(currentHome);
+                setName(currentHome.name);
+                setAddress(currentHome.address);
+                setShareholderNames(currentHome.shareholders.map(s => s.name));
+                setShareholderShares(currentHome.shareholders.map(s => s.shareValue.toString()));
+                setElectricityAddressCode(currentHome.electricity.addressCode);
+
+                if (currentHome.rent) {
+                    setHasRent(true);
+                    setTenantName(currentHome.rent.tenant.name);
+                    setRentPrice(currentHome.rent.price.amount.toString());
+                    setRentCurrency(currentHome.rent.price.currency);
+                    setRentDuration(currentHome.rent.rentPaymentDuration);
+                }
+            } else {
+                Alert.alert('Error', 'Home data not found.', [
+                    { text: 'OK', onPress: () => router.back() },
+                ]);
+            }
         }
-    }, [homeIndex]);
+    }, [homeIndex, isNewHome]);
 
     const handleSave = () => {
-        if (!homeData) return;
+        // Validate required fields
+        if (!name.trim()) {
+            Alert.alert('Error', 'Please enter a home name.');
+            return;
+        }
 
+        if (!address.trim()) {
+            Alert.alert('Error', 'Please enter an address.');
+            return;
+        }
+
+        // Build updated shareholders list
         const updatedShareholders: Shareholder[] = shareholderNames
             .map((name, i) => ({
                 name: name.trim(),
-                shareValue: homeData.shareholders[i]?.shareValue || 0,
+                shareValue: parseFloat(shareholderShares[i]) || 0,
             }))
-            .filter(s => s.name);
+            .filter(s => s.name); // Only include shareholders with names
 
+        // If no valid shareholders, show error
+        if (updatedShareholders.length === 0) {
+            Alert.alert('Error', 'Please add at least one shareholder with a name.');
+            return;
+        }
+
+        // Optional rent data
         let updatedRent: Rent | undefined = undefined;
-        if (homeData.rent) {
+        if (hasRent) {
+            if (!tenantName.trim()) {
+                Alert.alert('Error', 'Please enter a tenant name.');
+                return;
+            }
+
+            const priceAmount = parseFloat(rentPrice);
+            if (isNaN(priceAmount) || priceAmount <= 0) {
+                Alert.alert('Error', 'Please enter a valid rent amount.');
+                return;
+            }
+
             updatedRent = {
-                ...homeData.rent,
-                tenant: { ...homeData.rent.tenant, name: tenantName.trim() },
+                tenant: { name: tenantName.trim() },
                 price: {
-                    amount: parseFloat(rentPrice) || 0,
-                    currency: rentCurrency.trim(),
+                    amount: priceAmount,
+                    currency: rentCurrency.trim() || 'USD',
                 },
-                rentPaymentDuration: rentDuration.trim(),
+                rentPaymentDuration: rentDuration.trim() || 'Monthly',
             };
         }
 
+        // Update electricity
+        const updatedElectricity: Electricity = {
+            addressCode: electricityAddressCode.trim() || 'N/A',
+            bills: homeData?.electricity?.bills || [],
+        };
+
+        // Create the updated or new home data object
         const updatedHomeData: Home = {
-            ...homeData,
             name: name.trim(),
             address: address.trim(),
             shareholders: updatedShareholders,
             rent: updatedRent,
+            electricity: updatedElectricity,
         };
 
-        updateHome(homeIndex, updatedHomeData);
-        Alert.alert('Success', 'Home details updated.', [
-            { text: 'OK', onPress: () => router.back() },
-        ]);
+        if (isNewHome) {
+            // Add a new home
+            addHome(updatedHomeData);
+            Alert.alert('Success', 'New home created successfully.', [
+                { text: 'OK', onPress: () => router.back() },
+            ]);
+        } else {
+            // Update existing home
+            updateHome(homeIndex, updatedHomeData);
+            Alert.alert('Success', 'Home details updated.', [
+                { text: 'OK', onPress: () => router.back() },
+            ]);
+        }
     };
 
     const handleCancel = () => {
@@ -94,15 +159,31 @@ export default function EditHomePage() {
         setShareholderNames(updatedNames);
     };
 
+    const handleShareholderShareChange = (text: string, index: number) => {
+        const updatedShares = [...shareholderShares];
+        updatedShares[index] = text;
+        setShareholderShares(updatedShares);
+    };
+
     const handleAddShareholder = () => {
         setShareholderNames([...shareholderNames, '']);
+        setShareholderShares([...shareholderShares, '0']);
     };
 
     const handleRemoveShareholder = (indexToRemove: number) => {
+        if (shareholderNames.length <= 1) {
+            Alert.alert('Error', 'At least one shareholder is required.');
+            return;
+        }
         setShareholderNames(shareholderNames.filter((_, index) => index !== indexToRemove));
+        setShareholderShares(shareholderShares.filter((_, index) => index !== indexToRemove));
     };
 
-    if (!homeData) {
+    const toggleRentSection = () => {
+        setHasRent(!hasRent);
+    };
+
+    if (!homeData && !isNewHome) {
         return (
             <View style={styles.container}>
                 <Text>Loading...</Text>
@@ -112,7 +193,7 @@ export default function EditHomePage() {
 
     return (
         <ScrollView style={styles.container}>
-            <Text style={styles.title}>{homeData.name}</Text>
+            <Text style={styles.title}>{isNewHome ? 'Add New Home' : 'Edit Home'}</Text>
 
             <Text style={styles.label}>Name</Text>
             <TextInput
@@ -140,10 +221,17 @@ export default function EditHomePage() {
             {shareholderNames.map((shName, i) => (
                 <View key={i} style={styles.shareholderRow}>
                     <TextInput
-                        style={styles.shareholderInput}
+                        style={[styles.shareholderInput, { flex: 3 }]}
                         value={shName}
                         onChangeText={text => handleShareholderNameChange(text, i)}
                         placeholder={`Shareholder ${i + 1} Name`}
+                    />
+                    <TextInput
+                        style={[styles.shareholderInput, { flex: 1, marginLeft: 5 }]}
+                        value={shareholderShares[i]}
+                        onChangeText={text => handleShareholderShareChange(text, i)}
+                        placeholder="Share %"
+                        keyboardType="numeric"
                     />
                     <TouchableOpacity
                         onPress={() => handleRemoveShareholder(i)}
@@ -154,10 +242,26 @@ export default function EditHomePage() {
                 </View>
             ))}
 
-            {homeData.rent && (
-                <>
-                    <Text style={styles.sectionTitle}>Rent Details</Text>
+            <Text style={styles.sectionTitle}>Electricity Information</Text>
+            <Text style={styles.label}>Address Code</Text>
+            <TextInput
+                style={styles.input}
+                value={electricityAddressCode}
+                onChangeText={setElectricityAddressCode}
+                placeholder="Electricity Address Code"
+            />
 
+            <View style={styles.rentToggleRow}>
+                <Text style={styles.sectionTitle}>Rent Details</Text>
+                <TouchableOpacity onPress={toggleRentSection} style={styles.toggleButton}>
+                    <Text style={styles.toggleButtonText}>
+                        {hasRent ? 'Remove Rent' : 'Add Rent'}
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
+            {hasRent ? (
+                <>
                     <Text style={styles.label}>Tenant Name</Text>
                     <TextInput
                         style={styles.input}
@@ -192,14 +296,12 @@ export default function EditHomePage() {
                         placeholder="e.g., Monthly, Yearly"
                     />
                 </>
-            )}
-
-            {!homeData.rent && (
+            ) : (
                 <Text style={styles.infoText}>This property is not currently rented.</Text>
             )}
 
             <View style={styles.buttonContainer}>
-                <Button title="Save Changes" onPress={handleSave} />
+                <Button title={isNewHome ? 'Create Home' : 'Save Changes'} onPress={handleSave} />
                 <View style={{ width: 10 }} /> {/* Spacer */}
                 <Button title="Cancel" onPress={handleCancel} color="grey" />
             </View>
@@ -221,6 +323,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 18,
         fontWeight: 'bold',
+        marginTop: 20,
         marginBottom: 8,
         borderTopWidth: 1,
         borderTopColor: '#eee',
@@ -238,7 +341,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         backgroundColor: 'white',
         marginTop: 5,
-        marginBottom: 5,
+        marginBottom: 10,
     },
     infoText: {
         fontSize: 16,
@@ -256,6 +359,22 @@ const styles = StyleSheet.create({
     labelRow: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    rentToggleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    toggleButton: {
+        backgroundColor: '#007AFF',
+        padding: 8,
+        borderRadius: 5,
+    },
+    toggleButtonText: {
+        color: 'white',
+        fontWeight: '600',
     },
     addButton: {
         padding: 5,
@@ -266,7 +385,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     shareholderInput: {
-        flex: 1,
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
