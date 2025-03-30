@@ -16,7 +16,7 @@ export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
     };
 
     const handleEditPress = (event: GestureResponderEvent) => {
-        router.push(`/edit/${index}`);
+        router.push(`/home/${index}`);
     };
 
     return (
@@ -46,7 +46,9 @@ export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
 
                     <View style={styles.section}>
                         <Text style={styles.label}>Rent Price:</Text>
-                        <Text style={styles.value}>${home.rent.price}</Text>
+                        <Text style={styles.value}>
+                            {home.rent.price.currency} {home.rent.price.amount}
+                        </Text>
                     </View>
 
                     <View style={styles.section}>

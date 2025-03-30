@@ -10,7 +10,7 @@ export const homes: Home[] = [
             { name: 'Jane Smith', shareValue: 40 },
         ],
         rent: {
-            price: 1500,
+            price: { amount: 1500, currency: 'USD' },
             tenant: { name: 'Robert Johnson' },
             rentPaymentDuration: 'monthly',
         },
@@ -30,7 +30,7 @@ export const homes: Home[] = [
             { name: 'Bob Brown', shareValue: 50 },
         ],
         rent: {
-            price: 1200,
+            price: { amount: 1200, currency: 'USD' },
             tenant: { name: 'Charlie Davis' },
             rentPaymentDuration: 'quarterly',
         },
@@ -66,7 +66,7 @@ export const homes: Home[] = [
             { name: 'James Taylor', shareValue: 30 },
         ],
         rent: {
-            price: 2500,
+            price: { amount: 2500, currency: 'USD' },
             tenant: { name: 'Thomas Anderson' },
             rentPaymentDuration: 'monthly',
         },
@@ -86,4 +86,11 @@ export const getHomeByIndex = (index: number): Home | undefined => {
 
 export const updateHome = (index: number, updatedHome: Home): void => {
     homes[index] = updatedHome;
+};
+
+// New function to add a home
+export const addHome = (newHome: Home): void => {
+    homes.push(newHome);
+    // Optionally: Log or perform other actions after adding
+    console.log('Added new home:', newHome);
 };

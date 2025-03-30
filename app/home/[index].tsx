@@ -23,7 +23,8 @@ export default function EditHomePage() {
     const [address, setAddress] = useState('');
     const [shareholderNames, setShareholderNames] = useState<string[]>([]);
     const [tenantName, setTenantName] = useState('');
-    const [rentPrice, setRentPrice] = useState('');
+    const [rentPrice, setRentPrice] = useState('$');
+    const [rentCurrency, setRentCurrency] = useState('');
     const [rentDuration, setRentDuration] = useState('');
 
     useEffect(() => {
@@ -35,7 +36,8 @@ export default function EditHomePage() {
             setShareholderNames(currentHome.shareholders.map(s => s.name));
             if (currentHome.rent) {
                 setTenantName(currentHome.rent.tenant.name);
-                setRentPrice(currentHome.rent.price.toString());
+                setRentPrice(currentHome.rent.price.amount.toString());
+                setRentCurrency(currentHome.rent.price.currency);
                 setRentDuration(currentHome.rent.rentPaymentDuration);
             }
         } else {
@@ -60,7 +62,10 @@ export default function EditHomePage() {
             updatedRent = {
                 ...homeData.rent,
                 tenant: { ...homeData.rent.tenant, name: tenantName.trim() },
-                price: parseFloat(rentPrice) || 0,
+                price: {
+                    amount: parseFloat(rentPrice) || 0,
+                    currency: rentCurrency.trim(),
+                },
                 rentPaymentDuration: rentDuration.trim(),
             };
         }
@@ -161,13 +166,22 @@ export default function EditHomePage() {
                         placeholder="Tenant Name"
                     />
 
-                    <Text style={styles.label}>Rent Price ($)</Text>
+                    <Text style={styles.label}>Rent Price Amount</Text>
                     <TextInput
                         style={styles.input}
                         value={rentPrice}
                         onChangeText={setRentPrice}
-                        placeholder="Rent Price"
+                        placeholder="Rent Amount"
                         keyboardType="numeric"
+                    />
+
+                    <Text style={styles.label}>Rent Currency</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={rentCurrency}
+                        onChangeText={setRentCurrency}
+                        placeholder="e.g., USD, EUR"
+                        autoCapitalize="characters"
                     />
 
                     <Text style={styles.label}>Payment Duration</Text>

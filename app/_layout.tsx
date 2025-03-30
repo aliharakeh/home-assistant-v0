@@ -22,7 +22,7 @@ export default function RootLayout() {
                         title: 'Property Details',
                     }}
                 />
-                <Stack.Screen name="edit/[index]" options={{ title: 'Edit Property' }} />
+                <Stack.Screen name="home/[index]" options={{ title: 'Edit Property' }} />
             </Stack>
             <StatusBar />
         </ThemeProvider>

@@ -15,7 +15,10 @@ export interface Tenant {
 }
 
 export interface Rent {
-    price: number;
+    price: {
+        amount: number;
+        currency: string; // e.g., "USD", "EUR"
+    };
     tenant: Tenant;
     rentPaymentDuration: string; // e.g., "monthly", "yearly", etc.
 }
