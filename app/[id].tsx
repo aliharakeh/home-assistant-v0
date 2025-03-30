@@ -10,19 +10,15 @@ export default function HomeDetailsScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const homeId = parseInt(id as string, 10);
 
-    // State for the home data (to allow local updates)
     const [currentHome, setCurrentHome] = useState<Home | null>(null);
 
     useEffect(() => {
-        // Initialize state with home data based on ID
         const homeData = homes[homeId];
         setCurrentHome(homeData);
     }, [homeId]);
 
     const handleAddBill = (newBill: ElectricityBill) => {
         if (!currentHome) return;
-
-        // For this example, update the local state to reflect the change
         const updatedBills = [...currentHome.electricity.bills, newBill];
         const updatedHome = {
             ...currentHome,
@@ -31,13 +27,10 @@ export default function HomeDetailsScreen() {
                 bills: updatedBills,
             },
         };
-
-        // update local data
         setCurrentHome(updatedHome);
         homes[homeId] = updatedHome;
     };
 
-    // Use currentHome from state now
     if (!currentHome) {
         return (
             <SafeAreaView style={styles.container}>

@@ -91,6 +91,4 @@ export const updateHome = (index: number, updatedHome: Home): void => {
 // New function to add a home
 export const addHome = (newHome: Home): void => {
     homes.push(newHome);
-    // Optionally: Log or perform other actions after adding
-    console.log('Added new home:', newHome);
 };
