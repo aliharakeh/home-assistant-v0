@@ -1,35 +1,37 @@
+import { Home } from '@/models/models';
 import React from 'react';
 import { StyleSheet, Text, TextInput } from 'react-native';
 
 interface HomeBasicInfoFormProps {
-    name: string;
-    address: string;
-    onNameChange: (value: string) => void;
-    onAddressChange: (value: string) => void;
+    home: Home;
+    setHome: (home: Home) => void;
 }
 
-export default function HomeBasicInfoForm({
-    name,
-    address,
-    onNameChange,
-    onAddressChange,
-}: HomeBasicInfoFormProps) {
+export default function HomeBasicInfoForm({ home, setHome }: HomeBasicInfoFormProps) {
     return (
         <>
             <Text style={styles.label}>Name</Text>
             <TextInput
                 style={styles.input}
-                value={name}
-                onChangeText={onNameChange}
+                value={home.name}
+                onChangeText={text => setHome({ ...home, name: text })}
                 placeholder="Home Name"
             />
 
             <Text style={styles.label}>Address</Text>
             <TextInput
                 style={styles.input}
-                value={address}
-                onChangeText={onAddressChange}
+                value={home.address}
+                onChangeText={text => setHome({ ...home, address: text })}
                 placeholder="Address"
+            />
+
+            <Text style={styles.label}>Electricity Address Code</Text>
+            <TextInput
+                style={styles.input}
+                value={home.electricity_code}
+                onChangeText={text => setHome({ ...home, electricity_code: text })}
+                placeholder="Electricity Address Code"
             />
         </>
     );

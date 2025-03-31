@@ -1,11 +1,23 @@
-import { HomeCard } from '@/components/HomeCard';
-import { homes } from '@/data/sampleData';
+import { HomeCard } from '@/components/ui/HomeCard';
+import { Home } from '@/models/models';
+import { getAllHomes } from '@/models/schema';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React from 'react';
+import { useSQLiteContext } from 'expo-sqlite';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function IndexScreen() {
+    const db = useSQLiteContext();
+    const [homeData, setHomeData] = useState<Home[]>([]);
+
+    useEffect(() => {
+        const setup = async () => {
+            setHomeData(await getAllHomes(db));
+        };
+        setup();
+    }, []);
+
     const handleAddNewHome = () => {
         router.push('/home/new');
     };
@@ -24,8 +36,8 @@ export default function IndexScreen() {
                     <Text style={styles.headerSubtitle}>Manage your homes and rentals</Text>
                 </View>
 
-                {homes.map((home, index) => (
-                    <HomeCard key={index} home={home} index={index} />
+                {homeData.map(home => (
+                    <HomeCard key={home.id!} home={home} index={home.id!} />
                 ))}
             </ScrollView>
         </SafeAreaView>

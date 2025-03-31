@@ -11,7 +11,7 @@ export default function ActionButtons({ isNewHome, onSave, onCancel }: ActionBut
     return (
         <View style={styles.buttonContainer}>
             <Button title={isNewHome ? 'Create Home' : 'Save Changes'} onPress={onSave} />
-            <View style={{ width: 10 }} /> {/* Spacer */}
+            <View style={{ width: 10 }} />
             <Button title="Cancel" onPress={onCancel} color="grey" />
         </View>
     );

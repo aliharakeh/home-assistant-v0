@@ -1,4 +1,4 @@
-import { Electricity, ElectricityBill } from '@/models/models';
+import { ElectricityBill, Home } from '@/models/models';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
@@ -11,41 +11,41 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { CardLabel } from '../primitive/CardLabel';
 
 interface ElectricityInfoProps {
-    electricity: Electricity;
+    home: Home;
+    bills: ElectricityBill[];
     onAddBill: (newBill: ElectricityBill) => void;
 }
 
-export default function ElectricityInfo({ electricity, onAddBill }: ElectricityInfoProps) {
+export default function ElectricityInfo({ home, bills, onAddBill }: ElectricityInfoProps) {
     const [modalVisible, setModalVisible] = useState(false);
-    const [newBillMonthYear, setNewBillMonthYear] = useState('');
-    const [newBillPayment, setNewBillPayment] = useState('');
+    const [billDate, setBillDate] = useState('');
+    const [billAmount, setBillAmount] = useState('');
+    const [billCurrency, setBillCurrency] = useState('USD');
 
     const handleAddBill = () => {
-        // Basic Validation
-        if (!newBillMonthYear.trim() || !newBillPayment.trim()) {
+        if (!billDate.trim() || !billAmount.trim()) {
             Alert.alert('Error', 'Please fill in both fields.');
             return;
         }
-        const paymentAmount = parseFloat(newBillPayment);
-        if (isNaN(paymentAmount) || paymentAmount <= 0) {
+
+        const amount = parseFloat(billAmount);
+        if (isNaN(amount) || amount <= 0) {
             Alert.alert('Error', 'Please enter a valid payment amount.');
             return;
         }
 
-        const newBill = {
-            monthYear: newBillMonthYear.trim(),
-            payment: paymentAmount,
-        };
+        onAddBill({
+            date: billDate.trim(),
+            amount,
+            currency: billCurrency,
+        });
 
-        // Call the parent component's handler
-        onAddBill(newBill);
-
-        // Reset form and close modal
         setModalVisible(false);
-        setNewBillMonthYear('');
-        setNewBillPayment('');
+        setBillDate('');
+        setBillAmount('');
     };
 
     return (
@@ -61,17 +61,15 @@ export default function ElectricityInfo({ electricity, onAddBill }: ElectricityI
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.row}>
-                    <Text style={styles.label}>Address Code:</Text>
-                    <Text style={styles.value}>{electricity.addressCode}</Text>
-                </View>
+                <CardLabel label="Electricity Code:" value={home.electricity_code} />
 
-                <Text style={styles.subsectionTitle}>Recent Bills</Text>
-                {electricity.bills.map((bill, index) => (
-                    <View key={index} style={styles.row}>
-                        <Text style={styles.label}>{bill.monthYear}:</Text>
-                        <Text style={styles.value}>${bill.payment}</Text>
-                    </View>
+                <Text style={styles.subsectionTitle}>Bills</Text>
+                {bills.map((bill, index) => (
+                    <CardLabel
+                        key={index}
+                        label={`${bill.date}:`}
+                        value={`${bill.amount} ${bill.currency}`}
+                    />
                 ))}
             </View>
 
@@ -90,16 +88,22 @@ export default function ElectricityInfo({ electricity, onAddBill }: ElectricityI
 
                         <TextInput
                             style={styles.input}
-                            placeholder="Month/Year (e.g., 01/2024)"
-                            value={newBillMonthYear}
-                            onChangeText={setNewBillMonthYear}
+                            placeholder="Date (e.g., 01/2024)"
+                            value={billDate}
+                            onChangeText={setBillDate}
                         />
                         <TextInput
                             style={styles.input}
-                            placeholder="Payment Amount"
-                            value={newBillPayment}
-                            onChangeText={setNewBillPayment}
+                            placeholder="Amount"
+                            value={billAmount}
+                            onChangeText={setBillAmount}
                             keyboardType="numeric"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Currency"
+                            value={billCurrency}
+                            onChangeText={setBillCurrency}
                         />
 
                         <View style={styles.modalButtonRow}>
@@ -137,8 +141,8 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     subsectionTitle: {
-        fontSize: 16,
-        fontWeight: '600',
+        fontSize: 18,
+        fontWeight: '800',
         marginTop: 12,
         marginBottom: 8,
         color: '#444',

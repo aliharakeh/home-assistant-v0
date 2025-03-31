@@ -1,6 +1,5 @@
+import { sql } from '@/models/schema';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
 import { SplashScreen, Stack } from 'expo-router';
 import * as SQLite from 'expo-sqlite';
 import { SQLiteProvider } from 'expo-sqlite';
@@ -11,10 +10,7 @@ import 'react-native-reanimated';
 SplashScreen.preventAutoHideAsync();
 
 async function initDatabase(db: SQLite.SQLiteDatabase) {
-    const schemaAsset = require('../models/schema.sql');
-    const schemaUri = Asset.fromModule(schemaAsset).uri;
-    let schemaContent = await FileSystem.readAsStringAsync(schemaUri);
-    await db.execAsync(schemaContent);
+    await db.execAsync(sql);
 }
 
 export default function RootLayout() {

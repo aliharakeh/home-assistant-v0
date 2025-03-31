@@ -1,53 +1,58 @@
+import { Shareholder } from '@/models/models';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface ShareholderFormProps {
-    shareholderNames: string[];
-    shareholderShares: string[];
-    onNameChange: (text: string, index: number) => void;
-    onShareChange: (text: string, index: number) => void;
-    onAddShareholder: () => void;
-    onRemoveShareholder: (index: number) => void;
+    shareholders: Shareholder[];
+    setShareholders: (shareholders: Shareholder[]) => void;
 }
 
-export default function ShareholderForm({
-    shareholderNames,
-    shareholderShares,
-    onNameChange,
-    onShareChange,
-    onAddShareholder,
-    onRemoveShareholder,
-}: ShareholderFormProps) {
+export default function ShareholderForm({ shareholders, setShareholders }: ShareholderFormProps) {
     const handleRemove = (indexToRemove: number) => {
-        if (shareholderNames.length <= 1) {
+        if (shareholders.length <= 1) {
             Alert.alert('Error', 'At least one shareholder is required.');
             return;
         }
-        onRemoveShareholder(indexToRemove);
+        setShareholders(shareholders.filter((_, index) => index !== indexToRemove));
     };
 
     return (
         <>
             <View style={styles.labelRow}>
                 <Text style={styles.label}>Shareholders</Text>
-                <TouchableOpacity onPress={onAddShareholder} style={styles.addButton}>
+                <TouchableOpacity
+                    onPress={() => setShareholders([...shareholders, { name: '', shareValue: 0 }])}
+                    style={styles.addButton}
+                >
                     <Ionicons name="add-circle-outline" size={28} color="#007AFF" />
                 </TouchableOpacity>
             </View>
 
-            {shareholderNames.map((shName, i) => (
+            {shareholders.map((shareholder, i) => (
                 <View key={i} style={styles.shareholderRow}>
                     <TextInput
                         style={[styles.shareholderInput]}
-                        value={shName}
-                        onChangeText={text => onNameChange(text, i)}
+                        value={shareholder.name}
+                        onChangeText={text =>
+                            setShareholders(
+                                shareholders.map((s, index) =>
+                                    index === i ? { ...s, name: text } : s
+                                )
+                            )
+                        }
                         placeholder={`Shareholder ${i + 1} Name`}
                     />
                     <TextInput
                         style={[styles.shareholderInput, styles.shareholderValueInput]}
-                        value={shareholderShares[i]}
-                        onChangeText={text => onShareChange(text, i)}
+                        value={shareholder.shareValue.toString()}
+                        onChangeText={text =>
+                            setShareholders(
+                                shareholders.map((s, index) =>
+                                    index === i ? { ...s, shareValue: parseFloat(text) } : s
+                                )
+                            )
+                        }
                         placeholder="Share %"
                         keyboardType="numeric"
                     />

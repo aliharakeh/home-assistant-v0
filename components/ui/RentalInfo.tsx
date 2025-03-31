@@ -1,32 +1,25 @@
 import { Rent } from '@/models/models';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { CardLabel } from '../primitive/CardLabel';
 
 interface RentalInfoProps {
     rent: Rent;
+    card?: boolean;
 }
 
-export default function RentalInfo({ rent }: RentalInfoProps) {
+export default function RentalInfo({ rent, card }: RentalInfoProps) {
     return (
-        <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Rental Information</Text>
+        <View style={card ? styles.card : null}>
+            {card && <Text style={styles.sectionTitle}>Rental Information</Text>}
 
-            <View style={styles.row}>
-                <Text style={styles.label}>Tenant:</Text>
-                <Text style={styles.value}>{rent.tenant.name}</Text>
-            </View>
+            <CardLabel label="Tenant:" value={rent.tenant.name} />
 
-            <View style={styles.row}>
-                <Text style={styles.label}>Rent Amount:</Text>
-                <Text style={styles.value}>
-                    {rent.price.currency} {rent.price.amount}
-                </Text>
-            </View>
+            <CardLabel label="Rent Amount:" value={`${rent.price.currency} ${rent.price.amount}`} />
 
-            <View style={styles.row}>
-                <Text style={styles.label}>Payment Schedule:</Text>
-                <Text style={styles.value}>{rent.rentPaymentDuration}</Text>
-            </View>
+            <CardLabel label="Payment Schedule:" value={rent.rentPaymentDuration} />
+
+            <CardLabel label="Last Payment Date:" value={rent.lastPaymentDate || '-'} />
         </View>
     );
 }

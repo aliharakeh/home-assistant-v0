@@ -1,7 +1,9 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Home } from '../models/models';
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Home } from '../../models/models';
+import { CardLabel } from '../primitive/CardLabel';
+import RentalInfo from './RentalInfo';
 
 interface HomeCardProps {
     home: Home;
@@ -32,38 +34,13 @@ export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
             <Text style={styles.title}>{home.name}</Text>
             <Text style={styles.address}>{home.address}</Text>
 
-            <View style={styles.section}>
-                <Text style={styles.label}>Shareholders:</Text>
-                <Text style={styles.value}>{shareholderNames}</Text>
-            </View>
+            <CardLabel label="Electricity Code:" value={home.electricity_code} />
 
-            {home.rent && (
-                <>
-                    <View style={styles.section}>
-                        <Text style={styles.label}>Tenant:</Text>
-                        <Text style={styles.value}>{home.rent.tenant.name}</Text>
-                    </View>
+            <CardLabel label="Shareholders:" value={shareholderNames} />
 
-                    <View style={styles.section}>
-                        <Text style={styles.label}>Rent Price:</Text>
-                        <Text style={styles.value}>
-                            {home.rent.price.currency} {home.rent.price.amount}
-                        </Text>
-                    </View>
+            {home.rent && <RentalInfo rent={home.rent} />}
 
-                    <View style={styles.section}>
-                        <Text style={styles.label}>Payment Duration:</Text>
-                        <Text style={styles.value}>{home.rent.rentPaymentDuration}</Text>
-                    </View>
-                </>
-            )}
-
-            {!home.rent && (
-                <View style={styles.section}>
-                    <Text style={styles.label}>Status:</Text>
-                    <Text style={styles.value}>Not currently rented</Text>
-                </View>
-            )}
+            {!home.rent && <Text style={styles.status}>Not currently rented</Text>}
         </TouchableOpacity>
     );
 };
@@ -106,17 +83,9 @@ const styles = StyleSheet.create({
         color: '#666',
         marginBottom: 12,
     },
-    section: {
-        flexDirection: 'row',
-        marginVertical: 4,
-    },
-    label: {
-        fontWeight: '600',
-        marginRight: 8,
-        width: 120,
-    },
-    value: {
-        flex: 1,
-        color: '#333',
+    status: {
+        fontSize: 14,
+        color: '#666',
+        marginTop: 12,
     },
 });

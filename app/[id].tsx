@@ -1,34 +1,36 @@
-import ElectricityInfo from '@/components/ElectricityInfo';
-import RentalInfo from '@/components/RentalInfo';
-import { homes } from '@/data/sampleData';
-import { ElectricityBill, Home } from '@/models/models';
+import ElectricityInfo from '@/components/form/ElectricityInfo';
+import RentalInfo from '@/components/ui/RentalInfo';
+import { ElectricityBill, Home, validateElectricityBill } from '@/models/models';
+import { getElectricityBills, getHome, insertElectricityBill } from '@/models/schema';
 import { useLocalSearchParams } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeDetailsScreen() {
+    const db = useSQLiteContext();
     const { id } = useLocalSearchParams<{ id: string }>();
     const homeId = parseInt(id as string, 10);
 
     const [currentHome, setCurrentHome] = useState<Home | null>(null);
+    const [electricityBills, setElectricityBills] = useState<ElectricityBill[]>([]);
 
     useEffect(() => {
-        const homeData = homes[homeId];
-        setCurrentHome(homeData);
+        const setup = async () => {
+            const home = await getHome(db, homeId);
+            const bills = await getElectricityBills(db, homeId);
+            setCurrentHome(home);
+            setElectricityBills(bills);
+        };
+        setup();
     }, [homeId]);
 
-    const handleAddBill = (newBill: ElectricityBill) => {
-        if (!currentHome) return;
-        const updatedBills = [...currentHome.electricity.bills, newBill];
-        const updatedHome = {
-            ...currentHome,
-            electricity: {
-                ...currentHome.electricity,
-                bills: updatedBills,
-            },
-        };
-        setCurrentHome(updatedHome);
-        homes[homeId] = updatedHome;
+    const handleAddBill = async (newBill: ElectricityBill) => {
+        if (!validateElectricityBill(newBill)) {
+            return;
+        }
+        await insertElectricityBill(db, homeId, newBill);
+        setElectricityBills([...electricityBills, newBill]);
     };
 
     if (!currentHome) {
@@ -54,9 +56,15 @@ export default function HomeDetailsScreen() {
                     <Text style={styles.multilineValue}>{shareholderNames}</Text>
                 </View>
 
-                {currentHome.rent && <RentalInfo rent={currentHome.rent} />}
+                {currentHome.rent && <RentalInfo rent={currentHome.rent} card={true} />}
 
-                <ElectricityInfo electricity={currentHome.electricity} onAddBill={handleAddBill} />
+                {electricityBills.length > 0 && (
+                    <ElectricityInfo
+                        home={currentHome}
+                        bills={electricityBills}
+                        onAddBill={handleAddBill}
+                    />
+                )}
             </ScrollView>
         </SafeAreaView>
     );
