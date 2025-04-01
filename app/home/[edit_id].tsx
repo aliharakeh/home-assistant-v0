@@ -2,7 +2,7 @@ import ActionButtons from '@/components/form/ActionButtons';
 import HomeBasicInfoForm from '@/components/form/HomeBasicInfoForm';
 import RentForm from '@/components/form/RentForm';
 import ShareholderForm from '@/components/form/ShareholderForm';
-import { getUpdatedHome, Home, Rent, Shareholder, validateHome } from '@/models/models';
+import { getUpdatedHome, Home, validateHome } from '@/models/models';
 import { getHome, insertHome, updateHome } from '@/models/schema';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -20,13 +20,12 @@ export default function EditHomePage() {
         address: '',
         electricity: { clock_code: '', subsriptions: [] },
         shareholders: [{ name: '', shareValue: 0 }],
-    });
-    const [shareholders, setShareholders] = useState<Shareholder[]>([{ name: '', shareValue: 0 }]);
-    const [rent, setRent] = useState<Rent>({
-        tenant: { name: '' },
-        price: { amount: 0, currency: 'USD' },
-        rentPaymentDuration: 'Monthly',
-        lastPaymentDate: '',
+        rent: {
+            tenant: { name: '' },
+            price: { amount: 0, currency: '' },
+            rentPaymentDuration: '',
+            lastPaymentDate: '',
+        },
     });
 
     useEffect(() => {
@@ -34,10 +33,6 @@ export default function EditHomePage() {
             const currentHome = await getHome(db, homeId);
             if (currentHome) {
                 setHomeData(currentHome);
-                setShareholders(currentHome.shareholders);
-                if (currentHome.rent) {
-                    setRent(currentHome.rent);
-                }
             } else {
                 Alert.alert('Error', 'Home data not found.', [
                     { text: 'OK', onPress: () => router.back() },
@@ -50,7 +45,7 @@ export default function EditHomePage() {
     }, [homeId, isNewHome]);
 
     const handleSave = async () => {
-        const updatedHome = getUpdatedHome(homeData, shareholders, rent);
+        const updatedHome = getUpdatedHome(homeData);
         if (!validateHome(updatedHome)) {
             return;
         }
@@ -90,9 +85,9 @@ export default function EditHomePage() {
 
             <HomeBasicInfoForm home={homeData} setHome={setHomeData} />
 
-            <ShareholderForm shareholders={shareholders} setShareholders={setShareholders} />
+            <ShareholderForm home={homeData} setHome={setHomeData} />
 
-            <RentForm rent={rent} setRent={setRent} />
+            <RentForm home={homeData} setHome={setHomeData} />
 
             <ActionButtons isNewHome={isNewHome} onSave={handleSave} onCancel={handleCancel} />
         </ScrollView>

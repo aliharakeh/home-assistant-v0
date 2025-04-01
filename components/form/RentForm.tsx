@@ -1,62 +1,74 @@
-import { Rent } from '@/models/models';
+import { Home } from '@/models/models';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { InputWithLabel } from '../primitive/InputWithLabel';
 
 interface RentFormProps {
-    rent: Rent;
-    setRent: (rent: Rent) => void;
+    home: Home;
+    setHome: (home: Home) => void;
 }
 
-export default function RentForm({ rent, setRent }: RentFormProps) {
+export default function RentForm({ home, setHome }: RentFormProps) {
     return (
         <>
             <Text style={styles.sectionTitle}>Rent Details</Text>
 
-            {rent ? (
-                <>
-                    <InputWithLabel
-                        label="Tenant Name"
-                        value={rent.tenant.name}
-                        onChangeText={text => setRent({ ...rent, tenant: { name: text } })}
-                        placeholder="Tenant Name"
-                    />
+            <InputWithLabel
+                label="Tenant Name"
+                value={home.rent.tenant.name}
+                onChangeText={text =>
+                    setHome({ ...home, rent: { ...home.rent, tenant: { name: text } } })
+                }
+                placeholder="Tenant Name"
+            />
 
-                    <InputWithLabel
-                        label="Rent Price Amount"
-                        value={rent.price.amount.toString()}
-                        onChangeText={text =>
-                            setRent({ ...rent, price: { ...rent.price, amount: parseFloat(text) } })
-                        }
-                        placeholder="Rent Amount"
-                    />
+            <InputWithLabel
+                label="Rent Price Amount"
+                value={home.rent.price.amount.toString()}
+                onChangeText={text =>
+                    setHome({
+                        ...home,
+                        rent: {
+                            ...home.rent,
+                            price: { ...home.rent.price, amount: parseFloat(text) },
+                        },
+                    })
+                }
+                placeholder="Rent Amount"
+            />
 
-                    <InputWithLabel
-                        label="Rent Price Currency"
-                        value={rent.price.currency}
-                        onChangeText={text =>
-                            setRent({ ...rent, price: { ...rent.price, currency: text } })
-                        }
-                        placeholder="Rent Currency"
-                    />
+            <InputWithLabel
+                label="Rent Price Currency"
+                value={home.rent.price.currency}
+                onChangeText={text =>
+                    setHome({
+                        ...home,
+                        rent: {
+                            ...home.rent,
+                            price: { ...home.rent.price, currency: text },
+                        },
+                    })
+                }
+                placeholder="Rent Currency"
+            />
 
-                    <InputWithLabel
-                        label="Rent Payment Duration"
-                        value={rent.rentPaymentDuration}
-                        onChangeText={text => setRent({ ...rent, rentPaymentDuration: text })}
-                        placeholder="e.g., Monthly, Yearly"
-                    />
+            <InputWithLabel
+                label="Rent Payment Duration"
+                value={home.rent.rentPaymentDuration}
+                onChangeText={text =>
+                    setHome({ ...home, rent: { ...home.rent, rentPaymentDuration: text } })
+                }
+                placeholder="e.g., Monthly, Yearly"
+            />
 
-                    <InputWithLabel
-                        label="Last Payment Date"
-                        value={rent.lastPaymentDate}
-                        onChangeText={text => setRent({ ...rent, lastPaymentDate: text })}
-                        placeholder="e.g., 2024-01-01"
-                    />
-                </>
-            ) : (
-                <Text style={styles.infoText}>This property is not currently rented.</Text>
-            )}
+            <InputWithLabel
+                label="Last Payment Date"
+                value={home.rent.lastPaymentDate}
+                onChangeText={text =>
+                    setHome({ ...home, rent: { ...home.rent, lastPaymentDate: text } })
+                }
+                placeholder="e.g., 2024-01-01"
+            />
         </>
     );
 }

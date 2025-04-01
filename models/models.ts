@@ -82,7 +82,7 @@ export function parseHome(home: Home | null): Home | null {
     };
 }
 
-export function getUpdatedHome(home: Home, shareholders: Shareholder[], rent: Rent): Home {
+export function getUpdatedHome(home: Home): Home {
     const updatedElectricity: Electricity = {
         clock_code: home.electricity.clock_code.trim() || '',
         subsriptions: home.electricity.subsriptions.map(subsription => ({
@@ -91,19 +91,19 @@ export function getUpdatedHome(home: Home, shareholders: Shareholder[], rent: Re
         })),
     };
 
-    const updatedShareholders: Shareholder[] = shareholders.map((shareholder, i) => ({
+    const updatedShareholders: Shareholder[] = home.shareholders.map((shareholder, i) => ({
         name: shareholder.name.trim(),
         shareValue: parseFloat(shareholder.shareValue.toString()) || 0,
     }));
 
     const updatedRent: Rent = {
-        tenant: { name: rent.tenant.name.trim() },
+        tenant: { name: home.rent.tenant.name.trim() },
         price: {
-            amount: parseFloat(rent.price.amount.toString()),
-            currency: rent.price.currency.trim() || '$',
+            amount: parseFloat(home.rent.price.amount.toString()),
+            currency: home.rent.price.currency.trim() || '$',
         },
-        rentPaymentDuration: rent.rentPaymentDuration.trim() || 'Monthly',
-        lastPaymentDate: rent.lastPaymentDate.trim() || '',
+        rentPaymentDuration: home.rent.rentPaymentDuration.trim() || 'Monthly',
+        lastPaymentDate: home.rent.lastPaymentDate.trim() || '',
     };
 
     return {

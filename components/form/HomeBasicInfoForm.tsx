@@ -29,8 +29,10 @@ export default function HomeBasicInfoForm({ home, setHome }: HomeBasicInfoFormPr
             <Text style={styles.label}>Electricity Address Code</Text>
             <TextInput
                 style={styles.input}
-                value={home.electricity_code}
-                onChangeText={text => setHome({ ...home, electricity_code: text })}
+                value={home.electricity.clock_code}
+                onChangeText={text =>
+                    setHome({ ...home, electricity: { ...home.electricity, clock_code: text } })
+                }
                 placeholder="Electricity Address Code"
             />
         </>

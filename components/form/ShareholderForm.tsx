@@ -1,20 +1,23 @@
-import { Shareholder } from '@/models/models';
+import { Home } from '@/models/models';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface ShareholderFormProps {
-    shareholders: Shareholder[];
-    setShareholders: (shareholders: Shareholder[]) => void;
+    home: Home;
+    setHome: (home: Home) => void;
 }
 
-export default function ShareholderForm({ shareholders, setShareholders }: ShareholderFormProps) {
+export default function ShareholderForm({ home, setHome }: ShareholderFormProps) {
     const handleRemove = (indexToRemove: number) => {
-        if (shareholders.length <= 1) {
+        if (home.shareholders.length <= 1) {
             Alert.alert('Error', 'At least one shareholder is required.');
             return;
         }
-        setShareholders(shareholders.filter((_, index) => index !== indexToRemove));
+        setHome({
+            ...home,
+            shareholders: home.shareholders.filter((_, index) => index !== indexToRemove),
+        });
     };
 
     return (
@@ -22,24 +25,30 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
             <View style={styles.labelRow}>
                 <Text style={styles.label}>Shareholders</Text>
                 <TouchableOpacity
-                    onPress={() => setShareholders([...shareholders, { name: '', shareValue: 0 }])}
+                    onPress={() =>
+                        setHome({
+                            ...home,
+                            shareholders: [...home.shareholders, { name: '', shareValue: 0 }],
+                        })
+                    }
                     style={styles.addButton}
                 >
                     <Ionicons name="add-circle-outline" size={28} color="#007AFF" />
                 </TouchableOpacity>
             </View>
 
-            {shareholders.map((shareholder, i) => (
+            {home.shareholders.map((shareholder, i) => (
                 <View key={i} style={styles.shareholderRow}>
                     <TextInput
                         style={[styles.shareholderInput]}
                         value={shareholder.name}
                         onChangeText={text =>
-                            setShareholders(
-                                shareholders.map((s, index) =>
+                            setHome({
+                                ...home,
+                                shareholders: home.shareholders.map((s, index) =>
                                     index === i ? { ...s, name: text } : s
-                                )
-                            )
+                                ),
+                            })
                         }
                         placeholder={`Shareholder ${i + 1} Name`}
                     />
@@ -47,11 +56,12 @@ export default function ShareholderForm({ shareholders, setShareholders }: Share
                         style={[styles.shareholderInput, styles.shareholderValueInput]}
                         value={shareholder.shareValue.toString()}
                         onChangeText={text =>
-                            setShareholders(
-                                shareholders.map((s, index) =>
+                            setHome({
+                                ...home,
+                                shareholders: home.shareholders.map((s, index) =>
                                     index === i ? { ...s, shareValue: parseFloat(text) } : s
-                                )
-                            )
+                                ),
+                            })
                         }
                         placeholder="Share %"
                         keyboardType="numeric"
