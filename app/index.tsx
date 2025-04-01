@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import React, { useCallback, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function IndexScreen() {
     const db = useSQLiteContext();
@@ -26,23 +26,18 @@ export default function IndexScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView className="flex-1">
             <ScrollView>
-                <View style={styles.header}>
-                    <View style={styles.headerRow}>
-                        <Text style={styles.headerTitle}>My Properties</Text>
-                        <TouchableOpacity style={styles.addButton} onPress={handleAddNewHome}>
-                            <Ionicons name="add-circle" size={28} color="#007AFF" />
-                            <Text style={styles.addButtonText}>Add Home</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.headerSubtitle}>Manage your homes and rentals</Text>
+                <View className="p-4">
+                    {homeData.map(home => (
+                        <HomeCard key={home.id!} home={home} index={home.id!} />
+                    ))}
                 </View>
-
-                {homeData.map(home => (
-                    <HomeCard key={home.id!} home={home} index={home.id!} />
-                ))}
             </ScrollView>
+
+            <TouchableOpacity className="absolute bottom-4 right-4" onPress={handleAddNewHome}>
+                <Ionicons name="add-circle" size={60} color="#007AFF" />
+            </TouchableOpacity>
         </SafeAreaView>
     );
 }

@@ -5,6 +5,7 @@ import * as SQLite from 'expo-sqlite';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import '../global.css';
 
 SplashScreen.preventAutoHideAsync();
 

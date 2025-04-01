@@ -1,9 +1,10 @@
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { GestureResponderEvent, Text, TouchableOpacity, View } from 'react-native';
 import { Home } from '../../models/models';
+import { Card } from '../primitive/Card';
 import { CardLabel } from '../primitive/CardLabel';
-import RentalInfo from './RentalInfo';
 
 interface HomeCardProps {
     home: Home;
@@ -11,7 +12,7 @@ interface HomeCardProps {
 }
 
 export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
-    const shareholderNames = home.shareholders.map(shareholder => shareholder.name).join(', ');
+    const shareholderNames = home.shareholders.map(shareholder => shareholder.name);
 
     const handlePress = () => {
         router.push(`/${index}`);
@@ -21,71 +22,45 @@ export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
         router.push(`/home/${index}`);
     };
 
+    let rentContent = <Text className="text-gray-500">Not currently rented</Text>;
+    if (home.rent) {
+        rentContent = (
+            <>
+                <CardLabel label="Tenant:" value={home.rent.tenant.name} />
+
+                <CardLabel
+                    label="Rent Amount:"
+                    value={`${home.rent.price.currency} ${home.rent.price.amount}`}
+                />
+
+                <CardLabel label="Payment Schedule:" value={home.rent.rentPaymentDuration} />
+
+                <CardLabel label="Last Payment Date:" value={home.rent.lastPaymentDate || '-'} />
+            </>
+        );
+    }
+
     return (
-        <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.7}>
-            <TouchableOpacity
-                style={styles.editButton}
-                onPress={handleEditPress}
-                activeOpacity={0.7}
-            >
-                <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
+        <Card clickable onPress={handlePress} touchOpacity={0.7}>
+            <View className="flex-row justify-between items-center">
+                <Text className="text-2xl font-semibold">{home.name}</Text>
 
-            <Text style={styles.title}>{home.name}</Text>
-            <Text style={styles.address}>{home.address}</Text>
+                <TouchableOpacity
+                    className="bg-blue-100 rounded-md p-2"
+                    onPress={handleEditPress}
+                    activeOpacity={0.7}
+                >
+                    <Ionicons name="pencil" size={20} color="#007AFF" />
+                </TouchableOpacity>
+            </View>
 
-            <CardLabel label="Electricity Code:" value={home.electricity_code} />
+            <Text className="text-gray-500 mb-3">{home.address}</Text>
+
+            <CardLabel label="Electricity Code:" value={home.electricity.clock_code} />
 
             <CardLabel label="Shareholders:" value={shareholderNames} />
 
-            {home.rent && <RentalInfo rent={home.rent} />}
-
-            {!home.rent && <Text style={styles.status}>Not currently rented</Text>}
-        </TouchableOpacity>
+            {rentContent}
+        </Card>
     );
 };
-
-const styles = StyleSheet.create({
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        padding: 16,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-        elevation: 2,
-        position: 'relative',
-    },
-    editButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        backgroundColor: '#eee',
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        borderRadius: 4,
-        zIndex: 1,
-    },
-    editButtonText: {
-        fontSize: 12,
-        color: '#333',
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 4,
-    },
-    address: {
-        fontSize: 14,
-        color: '#666',
-        marginBottom: 12,
-    },
-    status: {
-        fontSize: 14,
-        color: '#666',
-        marginTop: 12,
-    },
-});

@@ -18,7 +18,7 @@ export default function EditHomePage() {
     const [homeData, setHomeData] = useState<Home>({
         name: '',
         address: '',
-        electricity_code: '',
+        electricity: { clock_code: '', subsriptions: [] },
         shareholders: [{ name: '', shareValue: 0 }],
     });
     const [shareholders, setShareholders] = useState<Shareholder[]>([{ name: '', shareValue: 0 }]);

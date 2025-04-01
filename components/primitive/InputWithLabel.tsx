@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 
 export interface InputWithLabelProps {
     label: string;
@@ -9,10 +9,10 @@ export interface InputWithLabelProps {
 
 export function InputWithLabel(p: InputWithLabelProps) {
     return (
-        <View>
-            <Text style={styles.label}>{p.label}</Text>
+        <View className="w-full gap-1 my-1">
+            <Text className="font-semibold text-lg">{p.label}</Text>
             <TextInput
-                style={styles.input}
+                className="border border-gray-300 bg-white py-3 rounded-md p-2"
                 value={p.value}
                 onChangeText={p.onChangeText}
                 placeholder={p.placeholder}
@@ -20,20 +20,3 @@ export function InputWithLabel(p: InputWithLabelProps) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    label: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        borderRadius: 5,
-        fontSize: 16,
-        backgroundColor: 'white',
-        marginTop: 5,
-        marginBottom: 10,
-    },
-});

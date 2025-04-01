@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 export interface CardLabelProps {
     label: string;
@@ -6,28 +6,17 @@ export interface CardLabelProps {
 }
 
 export function CardLabel(p: CardLabelProps) {
+    const value = Array.isArray(p.value) ? p.value : [p.value];
     return (
-        <View style={styles.container}>
-            <Text style={styles.label}>{p.label}</Text>
-            <Text style={styles.value}>
-                {Array.isArray(p.value) ? p.value.join(', ') : p.value}
-            </Text>
+        <View className="flex-row gap-2 w-full">
+            <Text className="font-semibold w-[120px]">{p.label}</Text>
+            <View>
+                {value.map((v, i) => (
+                    <Text key={i} className="text-gray-500">
+                        {v}
+                    </Text>
+                ))}
+            </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        columnGap: 4,
-    },
-    label: {
-        flex: 1,
-        fontWeight: '600',
-        width: 120,
-    },
-    value: {
-        flex: 1,
-        color: '#333',
-    },
-});
