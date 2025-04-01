@@ -2,21 +2,24 @@ import { HomeCard } from '@/components/ui/HomeCard';
 import { Home } from '@/models/models';
 import { getAllHomes } from '@/models/schema';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function IndexScreen() {
     const db = useSQLiteContext();
     const [homeData, setHomeData] = useState<Home[]>([]);
 
-    useEffect(() => {
-        const setup = async () => {
-            setHomeData(await getAllHomes(db));
-        };
-        setup();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            const loadData = async () => {
+                const homes = await getAllHomes(db);
+                setHomeData(homes);
+            };
+            loadData();
+        }, [db])
+    );
 
     const handleAddNewHome = () => {
         router.push('/home/new');

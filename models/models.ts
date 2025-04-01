@@ -89,6 +89,7 @@ export function getUpdatedHome(home: Home, shareholders: Shareholder[], rent: Re
     };
 
     return {
+        id: home.id,
         name: home.name.trim() || '',
         address: home.address.trim() || '',
         electricity_code: home.electricity_code.trim() || 'N/A',

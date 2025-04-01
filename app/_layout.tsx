@@ -5,7 +5,6 @@ import * as SQLite from 'expo-sqlite';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,12 +28,12 @@ export default function RootLayout() {
                 <Stack>
                     <Stack.Screen name="index" options={{ title: 'Home' }} />
                     <Stack.Screen
-                        name="[id]"
+                        name="[show_id]"
                         options={{
                             title: 'Property Details',
                         }}
                     />
-                    <Stack.Screen name="home/[index]" options={{ title: 'Edit Property' }} />
+                    <Stack.Screen name="home/[edit_id]" options={{ title: 'Edit Property' }} />
                 </Stack>
                 <StatusBar />
             </ThemeProvider>

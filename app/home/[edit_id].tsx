@@ -11,9 +11,9 @@ import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function EditHomePage() {
     const db = useSQLiteContext();
-    const { id } = useLocalSearchParams<{ id: string }>();
-    const isNewHome = id === 'new';
-    const homeId = isNewHome ? -1 : parseInt(id || '0', 10);
+    const { edit_id } = useLocalSearchParams<{ edit_id: string }>();
+    const isNewHome = edit_id === 'new';
+    const homeId = isNewHome ? -1 : parseInt(edit_id || '0', 10);
 
     const [homeData, setHomeData] = useState<Home>({
         name: '',
@@ -51,23 +51,17 @@ export default function EditHomePage() {
 
     const handleSave = async () => {
         const updatedHome = getUpdatedHome(homeData, shareholders, rent);
-
         if (!validateHome(updatedHome)) {
             return;
         }
 
         if (isNewHome) {
             await insertHome(db, updatedHome);
-            Alert.alert('Success', 'New home created successfully.', [
-                { text: 'OK', onPress: () => router.back() },
-            ]);
         } else {
             await updateHome(db, updatedHome);
-            Alert.alert('Success', 'Home details updated.', [
-                { text: 'OK', onPress: () => router.back() },
-            ]);
         }
-        router.navigate('/index');
+
+        router.back();
     };
 
     const handleCancel = () => {

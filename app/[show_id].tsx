@@ -9,8 +9,8 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeDetailsScreen() {
     const db = useSQLiteContext();
-    const { id } = useLocalSearchParams<{ id: string }>();
-    const homeId = parseInt(id as string, 10);
+    const { show_id } = useLocalSearchParams<{ show_id: string }>();
+    const homeId = parseInt(show_id as string, 10);
 
     const [currentHome, setCurrentHome] = useState<Home | null>(null);
     const [electricityBills, setElectricityBills] = useState<ElectricityBill[]>([]);
@@ -20,7 +20,7 @@ export default function HomeDetailsScreen() {
             const home = await getHome(db, homeId);
             const bills = await getElectricityBills(db, homeId);
             setCurrentHome(home);
-            setElectricityBills(bills);
+            setElectricityBills(bills.slice(-12));
         };
         setup();
     }, [homeId]);

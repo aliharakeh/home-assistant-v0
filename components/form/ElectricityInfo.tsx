@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
     Alert,
     Button,
+    Dimensions,
     Modal,
     StyleSheet,
     Text,
@@ -11,6 +12,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { LineChart } from 'react-native-gifted-charts';
 import { CardLabel } from '../primitive/CardLabel';
 
 interface ElectricityInfoProps {
@@ -61,16 +63,41 @@ export default function ElectricityInfo({ home, bills, onAddBill }: ElectricityI
                     </TouchableOpacity>
                 </View>
 
-                <CardLabel label="Electricity Code:" value={home.electricity_code} />
+                <View style={{ paddingInline: 16 }}>
+                    <CardLabel label="Electricity Code:" value={home.electricity_code} />
+                </View>
 
-                <Text style={styles.subsectionTitle}>Bills</Text>
-                {bills.map((bill, index) => (
-                    <CardLabel
-                        key={index}
-                        label={`${bill.date}:`}
-                        value={`${bill.amount} ${bill.currency}`}
+                <View style={{ marginTop: 20 }}>
+                    <LineChart
+                        initialSpacing={10}
+                        adjustToWidth
+                        rotateLabel
+                        height={200}
+                        labelsExtraHeight={40}
+                        xAxisLabelsVerticalShift={15}
+                        width={Dimensions.get('window').width - 80}
+                        spacing={22}
+                        yAxisOffset={bills.reduce(
+                            (acc, bill) => Math.min(acc, bill.amount),
+                            bills[0].amount
+                        )}
+                        data={bills.map(b => ({
+                            label: b.date,
+                            value: b.amount,
+                        }))}
                     />
-                ))}
+                </View>
+
+                <View style={{ paddingInline: 16 }}>
+                    <Text style={styles.subsectionTitle}>Bills</Text>
+                    {bills.map((bill, index) => (
+                        <CardLabel
+                            key={index}
+                            label={`${bill.date}:`}
+                            value={`${bill.amount} ${bill.currency}`}
+                        />
+                    ))}
+                </View>
             </View>
 
             {/* Modal for Adding Bill */}
@@ -126,7 +153,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
         borderRadius: 12,
-        padding: 16,
+        paddingBlock: 16,
         marginBottom: 16,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -162,6 +189,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     sectionTitleRow: {
+        paddingInline: 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
