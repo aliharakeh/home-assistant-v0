@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import migrations from '../drizzle/migrations';
 import '../global.css';
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
