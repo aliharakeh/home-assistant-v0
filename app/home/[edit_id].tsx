@@ -2,15 +2,13 @@ import ActionButtons from '@/components/form/ActionButtons';
 import HomeBasicInfoForm from '@/components/form/HomeBasicInfoForm';
 import RentForm from '@/components/form/RentForm';
 import ShareholderForm from '@/components/form/ShareholderForm';
-import { getUpdatedHome, Home, validateHome } from '@/models/models';
-import { getHome, insertHome, updateHome } from '@/models/schema';
+import { getHome, insertHome, updateHome } from '@/db/db';
+import { getUpdatedHome, Home, validateHome } from '@/db/models';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useSQLiteContext } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function EditHomePage() {
-    const db = useSQLiteContext();
     const { edit_id } = useLocalSearchParams<{ edit_id: string }>();
     const isNewHome = edit_id === 'new';
     const homeId = isNewHome ? -1 : parseInt(edit_id || '0', 10);
@@ -30,7 +28,7 @@ export default function EditHomePage() {
 
     useEffect(() => {
         const loadHome = async () => {
-            const currentHome = await getHome(db, homeId);
+            const currentHome = await getHome(homeId);
             if (currentHome) {
                 setHomeData(currentHome);
             } else {
@@ -51,9 +49,9 @@ export default function EditHomePage() {
         }
 
         if (isNewHome) {
-            await insertHome(db, updatedHome);
+            await insertHome(updatedHome);
         } else {
-            await updateHome(db, updatedHome);
+            await updateHome(updatedHome);
         }
 
         router.back();

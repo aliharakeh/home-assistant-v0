@@ -1,24 +1,22 @@
-import { HomeCard } from '@/components/ui/HomeCard';
-import { Home } from '@/models/models';
-import { getAllHomes } from '@/models/schema';
+import HomeCard from '@/components/ui/HomeCard';
+import { getAllHomes } from '@/db/db';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect } from 'expo-router';
-import { useSQLiteContext } from 'expo-sqlite';
 import React, { useCallback, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 
 export default function IndexScreen() {
-    const db = useSQLiteContext();
-    const [homeData, setHomeData] = useState<Home[]>([]);
+    const [homeData, setHomeData] = useState<any[]>([]);
 
+    // TODO: use drizzle live query instead of useFocusEffect
     useFocusEffect(
         useCallback(() => {
             const loadData = async () => {
-                const homes = await getAllHomes(db);
+                const homes = await getAllHomes();
                 setHomeData(homes);
             };
             loadData();
-        }, [db])
+        }, [])
     );
 
     const handleAddNewHome = () => {
@@ -30,7 +28,7 @@ export default function IndexScreen() {
             <ScrollView>
                 <View className="p-4">
                     {homeData.map(home => (
-                        <HomeCard key={home.id!} home={home} index={home.id!} />
+                        <HomeCard key={home.id!} home={home} />
                     ))}
                 </View>
             </ScrollView>
@@ -41,41 +39,3 @@ export default function IndexScreen() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f7f7f7',
-    },
-    header: {
-        padding: 16,
-        paddingBottom: 8,
-    },
-    headerRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 4,
-    },
-    headerTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    headerSubtitle: {
-        fontSize: 16,
-        color: '#666',
-    },
-    addButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#f0f9ff',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 20,
-    },
-    addButtonText: {
-        color: '#007AFF',
-        fontWeight: '600',
-        marginLeft: 4,
-    },
-});

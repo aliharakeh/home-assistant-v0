@@ -2,24 +2,23 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
 import { GestureResponderEvent, Text, TouchableOpacity, View } from 'react-native';
-import { Home } from '../../models/models';
+import { Home } from '../../db/models';
 import { Card } from '../primitive/Card';
 import { CardLabel } from '../primitive/CardLabel';
 
 interface HomeCardProps {
     home: Home;
-    index: number;
 }
 
-export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
+export default function HomeCard({ home }: HomeCardProps) {
     const shareholderNames = home.shareholders.map(shareholder => shareholder.name);
 
     const handlePress = () => {
-        router.push(`/${index}`);
+        router.push(`/${home.id}`);
     };
 
     const handleEditPress = (event: GestureResponderEvent) => {
-        router.push(`/home/${index}`);
+        router.push(`/home/${home.id}`);
     };
 
     let rentContent = <Text className="text-gray-500">Not currently rented</Text>;
@@ -63,4 +62,4 @@ export const HomeCard: React.FC<HomeCardProps> = ({ home, index }) => {
             {rentContent}
         </Card>
     );
-};
+}

@@ -1,4 +1,4 @@
-import { Home } from '@/models/models';
+import { Home } from '@/db/models';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';

@@ -3,4 +3,10 @@ const { withNativeWind } = require('nativewind/metro');
 
 const config = getDefaultConfig(__dirname)
 
-module.exports = withNativeWind(config, { input: './global.css' })
+// nativewind
+const updatedConfig = withNativeWind(config, { input: './global.css' });
+
+// drizzle
+updatedConfig.resolver.sourceExts.push('sql')
+
+module.exports = updatedConfig;

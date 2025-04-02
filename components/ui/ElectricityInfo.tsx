@@ -1,4 +1,4 @@
-import { ElectricityBill, Home } from '@/models/models';
+import { ElectricityBill, Home } from '@/db/models';
 import React from 'react';
 import { View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';

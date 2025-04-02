@@ -1,10 +1,9 @@
 import { CheckboxGroup } from '@/components/primitive/CheckboxGroup';
 import ElectricityInfo from '@/components/ui/ElectricityInfo';
-import { ElectricityBill, Home, validateElectricityBill } from '@/models/models';
-import { getElectricityBills, getHome, insertElectricityBill } from '@/models/schema';
+import { getHome, insertElectricityBill } from '@/db/db';
+import { ElectricityBill, Home, validateElectricityBill } from '@/db/models';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
-import { useSQLiteContext } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
 import {
     Modal,
@@ -17,7 +16,6 @@ import {
 } from 'react-native';
 
 export default function HomeDetailsScreen() {
-    const db = useSQLiteContext();
     const { show_id } = useLocalSearchParams<{ show_id: string }>();
     const homeId = parseInt(show_id as string, 10);
 
@@ -30,10 +28,12 @@ export default function HomeDetailsScreen() {
 
     useEffect(() => {
         const setup = async () => {
-            const home = await getHome(db, homeId);
-            const bills = await getElectricityBills(db, homeId);
+            const home = await getHome(homeId, true);
+            if (!home) {
+                return;
+            }
             setCurrentHome(home);
-            setElectricityBills(bills);
+            setElectricityBills(home.electricityBills ?? []);
         };
         setup();
     }, [homeId]);
@@ -45,7 +45,7 @@ export default function HomeDetailsScreen() {
         setModalVisible(false);
         setBillDate(new Date());
         setBillAmount('');
-        await insertElectricityBill(db, homeId, newBill);
+        await insertElectricityBill(homeId, newBill);
         setElectricityBills([...electricityBills, newBill]);
     };
 
@@ -118,7 +118,7 @@ export default function HomeDetailsScreen() {
                                 className="bg-blue-500 px-4 py-2 rounded-md"
                                 onPress={() =>
                                     handleAddBill({
-                                        date: billDate.getTime(),
+                                        date: billDate.toISOString(),
                                         amount: parseFloat(billAmount),
                                         subsription_type: billSubsriptionType,
                                     })

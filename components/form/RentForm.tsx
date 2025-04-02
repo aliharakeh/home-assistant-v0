@@ -1,4 +1,4 @@
-import { Home } from '@/models/models';
+import { Home } from '@/db/models';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { InputWithLabel } from '../primitive/InputWithLabel';

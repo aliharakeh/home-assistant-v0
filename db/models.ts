@@ -30,6 +30,14 @@ export const ElectricitySchema = z.object({
     ),
 });
 
+export const ElectricityBillSchema = z.object({
+    id: z.number().optional(),
+    homeId: z.number().optional(),
+    date: z.string(),
+    amount: z.number(),
+    subsription_type: z.string(),
+});
+
 export const HomeSchema = z.object({
     id: z.number().optional(),
     name: z.string(),
@@ -37,12 +45,7 @@ export const HomeSchema = z.object({
     electricity: ElectricitySchema,
     shareholders: z.array(ShareholderSchema),
     rent: RentSchema,
-});
-
-export const ElectricityBillSchema = z.object({
-    date: z.number(),
-    amount: z.number(),
-    subsription_type: z.string(),
+    electricityBills: z.array(ElectricityBillSchema).optional(),
 });
 
 export type Home = z.infer<typeof HomeSchema>;
@@ -68,18 +71,6 @@ export function validateElectricityBill(bill: ElectricityBill): ElectricityBill 
         return null;
     }
     return result.data;
-}
-
-export function parseHome(home: Home | null): Home | null {
-    if (!home) {
-        return null;
-    }
-    return {
-        ...home,
-        shareholders: JSON.parse(home.shareholders.toString()),
-        electricity: JSON.parse(home.electricity.toString()),
-        rent: JSON.parse(home.rent.toString()) as Rent,
-    };
 }
 
 export function getUpdatedHome(home: Home): Home {
