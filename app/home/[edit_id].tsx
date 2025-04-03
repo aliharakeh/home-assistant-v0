@@ -1,4 +1,5 @@
 import ActionButtons from '@/components/form/ActionButtons';
+import ElectricityForm from '@/components/form/ElectricityForm';
 import HomeBasicInfoForm from '@/components/form/HomeBasicInfoForm';
 import RentForm from '@/components/form/RentForm';
 import ShareholderForm from '@/components/form/ShareholderForm';
@@ -82,6 +83,8 @@ export default function EditHomePage() {
             <Text style={styles.title}>{isNewHome ? 'Add New Home' : 'Edit Home'}</Text>
 
             <HomeBasicInfoForm home={homeData} setHome={setHomeData} />
+
+            <ElectricityForm home={homeData} setHome={setHomeData} />
 
             <ShareholderForm home={homeData} setHome={setHomeData} />
 

@@ -1,7 +1,7 @@
 import { Home } from '@/db/models';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface ShareholderFormProps {
     home: Home;
@@ -22,8 +22,8 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
 
     return (
         <>
-            <View style={styles.labelRow}>
-                <Text style={styles.label}>Shareholders</Text>
+            <View className="flex-row items-center justify-between mt-3 mb-2">
+                <Text className="title">Shareholders</Text>
                 <TouchableOpacity
                     onPress={() =>
                         setHome({
@@ -31,16 +31,15 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
                             shareholders: [...home.shareholders, { name: '', shareValue: 0 }],
                         })
                     }
-                    style={styles.addButton}
                 >
                     <Ionicons name="add-circle-outline" size={28} color="#007AFF" />
                 </TouchableOpacity>
             </View>
 
             {home.shareholders.map((shareholder, i) => (
-                <View key={i} style={styles.shareholderRow}>
+                <View key={i} className="flex-row items-center">
                     <TextInput
-                        style={[styles.shareholderInput]}
+                        className="input w-[60%]"
                         value={shareholder.name}
                         onChangeText={text =>
                             setHome({
@@ -53,7 +52,7 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
                         placeholder={`Shareholder ${i + 1} Name`}
                     />
                     <TextInput
-                        style={[styles.shareholderInput, styles.shareholderValueInput]}
+                        className="input w-[30%] ml-1"
                         value={shareholder.shareValue.toString()}
                         onChangeText={text =>
                             setHome({
@@ -66,7 +65,10 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
                         placeholder="Share %"
                         keyboardType="numeric"
                     />
-                    <TouchableOpacity onPress={() => handleRemove(i)} style={styles.removeButton}>
+                    <TouchableOpacity
+                        onPress={() => handleRemove(i)}
+                        className="w-[10%] p-1.5 ml-1"
+                    >
                         <Ionicons name="close-circle" size={24} color="#ff4d4d" />
                     </TouchableOpacity>
                 </View>
@@ -74,42 +76,3 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    label: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    labelRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    addButton: {
-        padding: 5,
-    },
-    shareholderRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    shareholderInput: {
-        width: '70%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        borderRadius: 5,
-        fontSize: 16,
-        backgroundColor: 'white',
-    },
-    shareholderValueInput: {
-        width: '20%',
-        marginLeft: 5,
-    },
-    removeButton: {
-        width: '10%',
-        padding: 5,
-        marginLeft: 4,
-    },
-});

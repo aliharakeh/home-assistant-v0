@@ -1,9 +1,10 @@
 CREATE TABLE `electricity_bill` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`homeId` integer,
-	`amount` real,
 	`date` text,
-	FOREIGN KEY (`homeId`) REFERENCES `home`(`id`) ON UPDATE no action ON DELETE no action
+	`amount` real,
+	`subsription_type` text,
+	FOREIGN KEY (`homeId`) REFERENCES `home`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `home` (

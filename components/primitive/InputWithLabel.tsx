@@ -10,9 +10,9 @@ export interface InputWithLabelProps {
 export function InputWithLabel(p: InputWithLabelProps) {
     return (
         <View className="w-full gap-1 my-1">
-            <Text className="font-semibold text-lg">{p.label}</Text>
+            <Text className="label">{p.label}</Text>
             <TextInput
-                className="border border-gray-300 bg-white py-3 rounded-md p-2"
+                className="input"
                 value={p.value}
                 onChangeText={p.onChangeText}
                 placeholder={p.placeholder}

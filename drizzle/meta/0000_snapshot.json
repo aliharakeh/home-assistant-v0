@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "03809e8a-7a45-475e-b0bb-057bd4d7b6ac",
+  "id": "fbc9ee13-b021-406d-b8bd-42bd62aae40b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "electricity_bill": {
@@ -21,6 +21,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "date": {
+          "name": "date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "amount": {
           "name": "amount",
           "type": "real",
@@ -28,8 +35,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "date": {
-          "name": "date",
+        "subsription_type": {
+          "name": "subsription_type",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -48,7 +55,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

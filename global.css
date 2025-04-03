@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.input {
+    @apply border border-gray-300 bg-white py-3 rounded-md p-2 text-lg;
+}
+
+.label {
+    @apply font-semibold mb-1 text-lg;
+}
+
+.title {
+    @apply text-2xl font-semibold;
+}
+
+.btn-primary {
+    @apply bg-blue-500 px-4 py-2 rounded-md;
+}
+
+.btn-primary-text {
+    @apply text-white font-medium;
+}
+
+.btn-secondary {
+    @apply bg-gray-300 px-4 py-2 rounded-md mr-2;
+}
+
+.btn-secondary-text {
+    @apply text-gray-700 font-medium;
+}

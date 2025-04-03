@@ -1,6 +1,6 @@
 import { Home } from '@/db/models';
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { InputWithLabel } from '../primitive/InputWithLabel';
 
 interface RentFormProps {
@@ -11,7 +11,7 @@ interface RentFormProps {
 export default function RentForm({ home, setHome }: RentFormProps) {
     return (
         <>
-            <Text style={styles.sectionTitle}>Rent Details</Text>
+            <Text className="title mt-4">Rent Details</Text>
 
             <InputWithLabel
                 label="Tenant Name"
@@ -22,95 +22,64 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                 placeholder="Tenant Name"
             />
 
-            <InputWithLabel
-                label="Rent Price Amount"
-                value={home.rent.price.amount.toString()}
-                onChangeText={text =>
-                    setHome({
-                        ...home,
-                        rent: {
-                            ...home.rent,
-                            price: { ...home.rent.price, amount: parseFloat(text) },
-                        },
-                    })
-                }
-                placeholder="Rent Amount"
-            />
+            <View className="flex-row">
+                <View className="flex-1 mr-2">
+                    <InputWithLabel
+                        label="Rent Price Amount"
+                        value={home.rent.price.amount.toString()}
+                        onChangeText={text =>
+                            setHome({
+                                ...home,
+                                rent: {
+                                    ...home.rent,
+                                    price: { ...home.rent.price, amount: parseFloat(text) },
+                                },
+                            })
+                        }
+                        placeholder="Rent Amount"
+                    />
+                </View>
+                <View className="flex-1">
+                    <InputWithLabel
+                        label="Rent Price Currency"
+                        value={home.rent.price.currency}
+                        onChangeText={text =>
+                            setHome({
+                                ...home,
+                                rent: {
+                                    ...home.rent,
+                                    price: { ...home.rent.price, currency: text },
+                                },
+                            })
+                        }
+                        placeholder="Rent Currency"
+                    />
+                </View>
+            </View>
 
-            <InputWithLabel
-                label="Rent Price Currency"
-                value={home.rent.price.currency}
-                onChangeText={text =>
-                    setHome({
-                        ...home,
-                        rent: {
-                            ...home.rent,
-                            price: { ...home.rent.price, currency: text },
-                        },
-                    })
-                }
-                placeholder="Rent Currency"
-            />
+            <View className="flex-row">
+                <View className="flex-1 mr-2">
+                    <InputWithLabel
+                        label="Rent Payment Duration"
+                        value={home.rent.rentPaymentDuration}
+                        onChangeText={text =>
+                            setHome({ ...home, rent: { ...home.rent, rentPaymentDuration: text } })
+                        }
+                        placeholder="e.g., Monthly, Yearly"
+                    />
+                </View>
 
-            <InputWithLabel
-                label="Rent Payment Duration"
-                value={home.rent.rentPaymentDuration}
-                onChangeText={text =>
-                    setHome({ ...home, rent: { ...home.rent, rentPaymentDuration: text } })
-                }
-                placeholder="e.g., Monthly, Yearly"
-            />
-
-            <InputWithLabel
-                label="Last Payment Date"
-                value={home.rent.lastPaymentDate}
-                onChangeText={text =>
-                    setHome({ ...home, rent: { ...home.rent, lastPaymentDate: text } })
-                }
-                placeholder="e.g., 2024-01-01"
-            />
+                <View className="flex-1">
+                    <InputWithLabel
+                        label="Last Payment Date"
+                        value={home.rent.lastPaymentDate}
+                        onChangeText={text =>
+                            setHome({ ...home, rent: { ...home.rent, lastPaymentDate: text } })
+                        }
+                        placeholder="e.g., 2024-01-01"
+                    />
+                </View>
+            </View>
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginTop: 20,
-        marginBottom: 8,
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
-        paddingTop: 15,
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        borderRadius: 5,
-        fontSize: 16,
-        backgroundColor: 'white',
-        marginTop: 5,
-        marginBottom: 10,
-    },
-    infoText: {
-        fontSize: 16,
-        fontStyle: 'italic',
-        textAlign: 'center',
-        marginVertical: 20,
-        color: '#666',
-    },
-    toggleButton: {
-        backgroundColor: '#007AFF',
-        padding: 8,
-        borderRadius: 5,
-    },
-    toggleButtonText: {
-        color: 'white',
-        fontWeight: '600',
-    },
-});

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 interface ActionButtonsProps {
     isNewHome: boolean;
@@ -9,19 +9,16 @@ interface ActionButtonsProps {
 
 export default function ActionButtons({ isNewHome, onSave, onCancel }: ActionButtonsProps) {
     return (
-        <View style={styles.buttonContainer}>
-            <Button title={isNewHome ? 'Create Home' : 'Save Changes'} onPress={onSave} />
-            <View style={{ width: 10 }} />
-            <Button title="Cancel" onPress={onCancel} color="grey" />
+        <View className="flex-row justify-center mt-6 mb-16">
+            <TouchableOpacity className="btn-secondary" onPress={onCancel} activeOpacity={0.7}>
+                <Text className="btn-secondary-text">Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity className="btn-primary" onPress={onSave} activeOpacity={0.7}>
+                <Text className="btn-primary-text">
+                    {isNewHome ? 'Create Home' : 'Save Changes'}
+                </Text>
+            </TouchableOpacity>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 20,
-        marginBottom: 50, // Ensure space at bottom
-    },
-});

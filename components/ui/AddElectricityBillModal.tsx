@@ -56,18 +56,12 @@ export default function AddElectricityBillModal({
                     </View>
 
                     <View className="flex-row justify-end mt-2">
-                        <TouchableOpacity
-                            className="bg-gray-300 px-4 py-2 rounded-md mr-2"
-                            onPress={onClose}
-                        >
-                            <Text className="text-gray-700 font-medium">Cancel</Text>
+                        <TouchableOpacity className="btn-secondary" onPress={onClose}>
+                            <Text className="btn-secondary-text">Cancel</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            className="bg-blue-500 px-4 py-2 rounded-md"
-                            onPress={handleSave}
-                        >
-                            <Text className="text-white font-medium">Save Bill</Text>
+                        <TouchableOpacity className="btn-primary" onPress={handleSave}>
+                            <Text className="btn-primary-text">Save Bill</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
