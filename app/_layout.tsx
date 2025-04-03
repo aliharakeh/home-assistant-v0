@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import migrations from '../drizzle/migrations';
 import '../global.css';
+import '../i18n/i18n.config';
 
 SplashScreen.preventAutoHideAsync();
 
