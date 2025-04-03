@@ -7,9 +7,11 @@ import { getHome, insertHome, updateHome } from '@/db/db';
 import { getUpdatedHome, Home, validateHome } from '@/db/models';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function EditHomePage() {
+    const { t } = useTranslation();
     const { edit_id } = useLocalSearchParams<{ edit_id: string }>();
     const isNewHome = edit_id === 'new';
     const homeId = isNewHome ? -1 : parseInt(edit_id || '0', 10);
@@ -33,8 +35,8 @@ export default function EditHomePage() {
             if (currentHome) {
                 setHomeData(currentHome);
             } else {
-                Alert.alert('Error', 'Home data not found.', [
-                    { text: 'OK', onPress: () => router.back() },
+                Alert.alert(t('Error'), t('Home data not found.'), [
+                    { text: t('OK'), onPress: () => router.back() },
                 ]);
             }
         };
@@ -65,7 +67,7 @@ export default function EditHomePage() {
     if (!homeData) {
         return (
             <View style={styles.container}>
-                <Text>Home data not found.</Text>
+                <Text>{t('Home data not found.')}</Text>
             </View>
         );
     }
@@ -73,14 +75,14 @@ export default function EditHomePage() {
     if (!homeData && !isNewHome) {
         return (
             <View style={styles.container}>
-                <Text>Loading...</Text>
+                <Text>{t('Loading...')}</Text>
             </View>
         );
     }
 
     return (
         <ScrollView style={styles.container}>
-            <Text style={styles.title}>{isNewHome ? 'Add New Home' : 'Edit Home'}</Text>
+            <Text style={styles.title}>{isNewHome ? t('Add New Home') : t('Edit Home')}</Text>
 
             <HomeBasicInfoForm home={homeData} setHome={setHomeData} />
 

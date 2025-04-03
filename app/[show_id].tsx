@@ -5,9 +5,11 @@ import { ElectricityBill, Home, validateElectricityBill } from '@/db/models';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity } from 'react-native';
 
 export default function HomeDetailsScreen() {
+    const { t } = useTranslation();
     const { show_id } = useLocalSearchParams<{ show_id: string }>();
     const homeId = parseInt(show_id as string, 10);
 
@@ -39,7 +41,7 @@ export default function HomeDetailsScreen() {
     if (!currentHome) {
         return (
             <SafeAreaView>
-                <Text>Home not found</Text>
+                <Text>{t('Home not found')}</Text>
             </SafeAreaView>
         );
     }

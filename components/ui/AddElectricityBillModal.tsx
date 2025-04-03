@@ -1,6 +1,7 @@
 import { CheckboxGroup } from '@/components/primitive/CheckboxGroup';
 import { ElectricityBill, Home } from '@/db/models';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface AddElectricityBillModalProps {
@@ -16,6 +17,8 @@ export default function AddElectricityBillModal({
     onSave,
     home,
 }: AddElectricityBillModalProps) {
+    const { t } = useTranslation();
+    
     const [billDate, setBillDate] = React.useState(new Date());
     const [billAmount, setBillAmount] = React.useState('');
     const [billSubsriptionType, setBillSubsriptionType] = React.useState('');
@@ -35,12 +38,12 @@ export default function AddElectricityBillModal({
             <View className="flex-1 justify-center items-center bg-gray-500/50">
                 <View className="bg-white rounded-lg p-6 w-5/6 shadow-lg">
                     <Text className="text-xl font-bold mb-4 text-center">
-                        Add New Electricity Bill
+                        {t('Add New Electricity Bill')}
                     </Text>
 
                     <TextInput
                         className="border border-gray-300 rounded-md p-3 mb-4"
-                        placeholder="Amount"
+                        placeholder={t('Amount')}
                         value={billAmount}
                         onChangeText={setBillAmount}
                         keyboardType="numeric"
@@ -57,11 +60,11 @@ export default function AddElectricityBillModal({
 
                     <View className="flex-row justify-end mt-2">
                         <TouchableOpacity className="btn-secondary" onPress={onClose}>
-                            <Text className="btn-secondary-text">Cancel</Text>
+                            <Text className="btn-secondary-text">{t('Cancel')}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity className="btn-primary" onPress={handleSave}>
-                            <Text className="btn-primary-text">Save Bill</Text>
+                            <Text className="btn-primary-text">{t('Save Bill')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

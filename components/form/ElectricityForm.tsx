@@ -1,6 +1,7 @@
 import { Home } from '@/db/models';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { InputWithLabel } from '../primitive/InputWithLabel';
 
@@ -10,6 +11,8 @@ interface ElectricityFormProps {
 }
 
 export default function ElectricityForm({ home, setHome }: ElectricityFormProps) {
+    const { t } = useTranslation();
+    
     const handleRemove = (indexToRemove: number) => {
         setHome({
             ...home,
@@ -50,17 +53,17 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
 
     return (
         <View>
-            <Text className="title mt-3 mb-2">Electricity</Text>
+            <Text className="title mt-3 mb-2">{t('Electricity')}</Text>
 
             <InputWithLabel
-                label="Clock Code"
+                label={t('Clock Code')}
                 value={home.electricity.clock_code}
                 onChangeText={handleClockCodeChange}
-                placeholder="Electricity Address Code"
+                placeholder={t('Electricity Address Code')}
             />
 
             <View className="flex-row items-center justify-between mt-2.5">
-                <Text className="label">Electricity Subsriptions</Text>
+                <Text className="label">{t('Electricity Subsriptions')}</Text>
                 <TouchableOpacity onPress={handleAdd}>
                     <Ionicons name="add-circle-outline" size={28} color="#007AFF" />
                 </TouchableOpacity>
@@ -72,14 +75,14 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
                         className="input w-[60%]"
                         value={subsription.name}
                         onChangeText={text => handleChange(i, 'name', text)}
-                        placeholder={`Subsription ${i + 1}`}
+                        placeholder={`${t('Subsription')} ${i + 1}`}
                     />
 
                     <TextInput
                         className="input w-[30%] ml-1"
                         value={subsription.currency}
                         onChangeText={text => handleChange(i, 'currency', text)}
-                        placeholder="Currency"
+                        placeholder={t('Currency')}
                         keyboardType="numeric"
                     />
 

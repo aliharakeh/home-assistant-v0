@@ -1,6 +1,7 @@
 import { Home } from '@/db/models';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface ShareholderFormProps {
@@ -9,9 +10,11 @@ interface ShareholderFormProps {
 }
 
 export default function ShareholderForm({ home, setHome }: ShareholderFormProps) {
+    const { t } = useTranslation();
+    
     const handleRemove = (indexToRemove: number) => {
         if (home.shareholders.length <= 1) {
-            Alert.alert('Error', 'At least one shareholder is required.');
+            Alert.alert(t('Error'), t('At least one shareholder is required.'));
             return;
         }
         setHome({
@@ -23,7 +26,7 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
     return (
         <>
             <View className="flex-row items-center justify-between mt-3 mb-2">
-                <Text className="title">Shareholders</Text>
+                <Text className="title">{t('Shareholders')}</Text>
                 <TouchableOpacity
                     onPress={() =>
                         setHome({
@@ -49,8 +52,9 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
                                 ),
                             })
                         }
-                        placeholder={`Shareholder ${i + 1} Name`}
+                        placeholder={`${t('Shareholder')} ${i + 1} ${t('Name')}`}
                     />
+
                     <TextInput
                         className="input w-[30%] ml-1"
                         value={shareholder.shareValue.toString()}
@@ -62,9 +66,10 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
                                 ),
                             })
                         }
-                        placeholder="Share %"
+                        placeholder={`${t('Share')}`}
                         keyboardType="numeric"
                     />
+
                     <TouchableOpacity
                         onPress={() => handleRemove(i)}
                         className="w-[10%] p-1.5 ml-1"

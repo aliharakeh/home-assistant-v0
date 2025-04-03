@@ -1,5 +1,6 @@
 import { Home } from '@/db/models';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TextInput } from 'react-native';
 
 interface HomeBasicInfoFormProps {
@@ -8,22 +9,24 @@ interface HomeBasicInfoFormProps {
 }
 
 export default function HomeBasicInfoForm({ home, setHome }: HomeBasicInfoFormProps) {
+    const { t } = useTranslation();
+    
     return (
         <>
-            <Text style={styles.label}>Name</Text>
+            <Text style={styles.label}>{t('Name')}</Text>
             <TextInput
                 style={styles.input}
                 value={home.name}
                 onChangeText={text => setHome({ ...home, name: text })}
-                placeholder="Home Name"
+                placeholder={t('Home Name')}
             />
 
-            <Text style={styles.label}>Address</Text>
+            <Text style={styles.label}>{t('Address')}</Text>
             <TextInput
                 style={styles.input}
                 value={home.address}
                 onChangeText={text => setHome({ ...home, address: text })}
-                placeholder="Address"
+                placeholder={t('Address')}
             />
         </>
     );

@@ -1,5 +1,6 @@
 import { Home } from '@/db/models';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { InputWithLabel } from '../primitive/InputWithLabel';
 
@@ -9,23 +10,25 @@ interface RentFormProps {
 }
 
 export default function RentForm({ home, setHome }: RentFormProps) {
+    const { t } = useTranslation();
+    
     return (
         <>
-            <Text className="title mt-4">Rent Details</Text>
+            <Text className="title mt-4">{t('Rent Details')}</Text>
 
             <InputWithLabel
-                label="Tenant Name"
+                label={t('Tenant Name')}
                 value={home.rent.tenant.name}
                 onChangeText={text =>
                     setHome({ ...home, rent: { ...home.rent, tenant: { name: text } } })
                 }
-                placeholder="Tenant Name"
+                placeholder={t('Tenant Name')}
             />
 
             <View className="flex-row">
                 <View className="flex-1 mr-2">
                     <InputWithLabel
-                        label="Rent Price Amount"
+                        label={t('Rent Price Amount')}
                         value={home.rent.price.amount.toString()}
                         onChangeText={text =>
                             setHome({
@@ -36,12 +39,12 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                                 },
                             })
                         }
-                        placeholder="Rent Amount"
+                        placeholder={t('Rent Amount')}
                     />
                 </View>
                 <View className="flex-1">
                     <InputWithLabel
-                        label="Rent Price Currency"
+                        label={t('Rent Price Currency')}
                         value={home.rent.price.currency}
                         onChangeText={text =>
                             setHome({
@@ -52,7 +55,7 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                                 },
                             })
                         }
-                        placeholder="Rent Currency"
+                        placeholder={t('Rent Currency')}
                     />
                 </View>
             </View>
@@ -60,23 +63,23 @@ export default function RentForm({ home, setHome }: RentFormProps) {
             <View className="flex-row">
                 <View className="flex-1 mr-2">
                     <InputWithLabel
-                        label="Rent Payment Duration"
+                        label={t('Rent Payment Duration')}
                         value={home.rent.rentPaymentDuration}
                         onChangeText={text =>
                             setHome({ ...home, rent: { ...home.rent, rentPaymentDuration: text } })
                         }
-                        placeholder="e.g., Monthly, Yearly"
+                        placeholder={t('e.g., Monthly, Yearly')}
                     />
                 </View>
 
                 <View className="flex-1">
                     <InputWithLabel
-                        label="Last Payment Date"
+                        label={t('Last Payment Date')}
                         value={home.rent.lastPaymentDate}
                         onChangeText={text =>
                             setHome({ ...home, rent: { ...home.rent, lastPaymentDate: text } })
                         }
-                        placeholder="e.g., 2024-01-01"
+                        placeholder={t('e.g., 2024-01-01')}
                     />
                 </View>
             </View>

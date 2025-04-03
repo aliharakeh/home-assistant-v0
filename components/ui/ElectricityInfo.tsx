@@ -1,5 +1,6 @@
 import { ElectricityBill, Home } from '@/db/models';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { Card } from '../primitive/Card';
@@ -12,13 +13,15 @@ interface ElectricityInfoProps {
 }
 
 export default function ElectricityInfo({ home, bills, onAddBill }: ElectricityInfoProps) {
+    const { t } = useTranslation();
+    
     const subsriptionTypes = home.electricity.subsriptions.map(s => `${s.name} (${s.currency})`);
 
     return (
         <Card>
-            <CardLabel label="Electricity Code:" value={home.electricity.clock_code} />
+            <CardLabel label={t('Electricity Clock Code')} value={home.electricity.clock_code} />
 
-            <CardLabel label="Subsription Types:" value={subsriptionTypes} />
+            <CardLabel label={t('Subscription Types')} value={subsriptionTypes} />
 
             {bills.length > 0 && (
                 <View style={{ marginTop: 20 }}>

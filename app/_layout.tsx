@@ -4,6 +4,7 @@ import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import migrations from '../drizzle/migrations';
 import '../global.css';
 
@@ -11,6 +12,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const { success, error } = useMigrations(db, migrations);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!success) return;
@@ -20,14 +22,14 @@ export default function RootLayout() {
     return (
         <ThemeProvider value={DefaultTheme}>
             <Stack>
-                <Stack.Screen name="index" options={{ title: 'Home' }} />
+                <Stack.Screen name="index" options={{ title: t('Home') }} />
                 <Stack.Screen
                     name="[show_id]"
                     options={{
-                        title: 'Property Details',
+                        title: t('Property Details'),
                     }}
                 />
-                <Stack.Screen name="home/[edit_id]" options={{ title: 'Edit Property' }} />
+                <Stack.Screen name="home/[edit_id]" options={{ title: t('Edit Property') }} />
             </Stack>
             <StatusBar />
         </ThemeProvider>
