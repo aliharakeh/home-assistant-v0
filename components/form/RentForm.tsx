@@ -11,9 +11,9 @@ interface RentFormProps {
 
 export default function RentForm({ home, setHome }: RentFormProps) {
     const { t } = useTranslation();
-    
+
     return (
-        <>
+        <View className="mt-4">
             <Text className="title mt-4">{t('Rent Details')}</Text>
 
             <InputWithLabel
@@ -28,23 +28,24 @@ export default function RentForm({ home, setHome }: RentFormProps) {
             <View className="flex-row">
                 <View className="flex-1 mr-2">
                     <InputWithLabel
-                        label={t('Rent Price Amount')}
+                        label={t('Amount')}
                         value={home.rent.price.amount.toString()}
                         onChangeText={text =>
                             setHome({
                                 ...home,
                                 rent: {
                                     ...home.rent,
-                                    price: { ...home.rent.price, amount: parseFloat(text) },
+                                    price: { ...home.rent.price, amount: parseFloat(text || '0') },
                                 },
                             })
                         }
-                        placeholder={t('Rent Amount')}
+                        placeholder={t('Amount_PH')}
+                        keyboardType="numeric"
                     />
                 </View>
                 <View className="flex-1">
                     <InputWithLabel
-                        label={t('Rent Price Currency')}
+                        label={t('Currency')}
                         value={home.rent.price.currency}
                         onChangeText={text =>
                             setHome({
@@ -55,7 +56,7 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                                 },
                             })
                         }
-                        placeholder={t('Rent Currency')}
+                        placeholder={t('Currency_PH')}
                     />
                 </View>
             </View>
@@ -83,6 +84,6 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                     />
                 </View>
             </View>
-        </>
+        </View>
     );
 }

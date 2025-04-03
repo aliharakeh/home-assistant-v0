@@ -1,10 +1,11 @@
-import { Text, TextInput, View } from 'react-native';
+import { KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
 
 export interface InputWithLabelProps {
     label: string;
     value: string;
     onChangeText: (text: string) => void;
     placeholder: string;
+    keyboardType?: KeyboardTypeOptions;
 }
 
 export function InputWithLabel(p: InputWithLabelProps) {
@@ -16,6 +17,7 @@ export function InputWithLabel(p: InputWithLabelProps) {
                 value={p.value}
                 onChangeText={p.onChangeText}
                 placeholder={p.placeholder}
+                keyboardType={p.keyboardType ?? 'default'}
             />
         </View>
     );

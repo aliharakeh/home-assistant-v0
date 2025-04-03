@@ -43,6 +43,14 @@ export async function getHome(id: number, withElectricityBills = false) {
     }
 }
 
+export async function deleteHome(id: number) {
+    try {
+        await db.delete(schema.HomeTable).where(eq(schema.HomeTable.id, id));
+    } catch (error) {
+        console.log('error deleting home', error);
+    }
+}
+
 export async function insertHome(home: Home) {
     try {
         await db.insert(schema.HomeTable).values({

@@ -20,20 +20,20 @@ export const RentSchema = z.object({
     lastPaymentDate: z.string(),
 });
 
+export const SubsriptionTypeSchema = z.object({
+    name: z.string(),
+    currency: z.string(),
+});
+
 export const ElectricitySchema = z.object({
     clock_code: z.string(),
-    subsriptions: z.array(
-        z.object({
-            name: z.string(),
-            currency: z.string(),
-        })
-    ),
+    subsriptions: z.array(SubsriptionTypeSchema),
 });
 
 export const ElectricityBillSchema = z.object({
     id: z.number().optional(),
     homeId: z.number().optional(),
-    date: z.string(),
+    date: z.number(),
     amount: z.number(),
     subsription_type: z.string(),
 });
@@ -54,6 +54,7 @@ export type Rent = z.infer<typeof RentSchema>;
 export type Tenant = z.infer<typeof TenantSchema>;
 export type Electricity = z.infer<typeof ElectricitySchema>;
 export type ElectricityBill = z.infer<typeof ElectricityBillSchema>;
+export type SubsriptionType = z.infer<typeof SubsriptionTypeSchema>;
 
 export function validateHome(home: Home): Home | null {
     const result = HomeSchema.safeParse(home);
@@ -75,10 +76,10 @@ export function validateElectricityBill(bill: ElectricityBill): ElectricityBill 
 
 export function getUpdatedHome(home: Home): Home {
     const updatedElectricity: Electricity = {
-        clock_code: home.electricity.clock_code.trim() || '',
+        clock_code: home.electricity.clock_code.trim(),
         subsriptions: home.electricity.subsriptions.map(subsription => ({
             name: subsription.name.trim(),
-            currency: subsription.currency.trim() || '$',
+            currency: subsription.currency.trim(),
         })),
     };
 
@@ -91,16 +92,16 @@ export function getUpdatedHome(home: Home): Home {
         tenant: { name: home.rent.tenant.name.trim() },
         price: {
             amount: parseFloat(home.rent.price.amount.toString()),
-            currency: home.rent.price.currency.trim() || '$',
+            currency: home.rent.price.currency.trim(),
         },
-        rentPaymentDuration: home.rent.rentPaymentDuration.trim() || 'Monthly',
-        lastPaymentDate: home.rent.lastPaymentDate.trim() || '',
+        rentPaymentDuration: home.rent.rentPaymentDuration.trim(),
+        lastPaymentDate: home.rent.lastPaymentDate.trim(),
     };
 
     return {
         id: home.id,
-        name: home.name.trim() || '',
-        address: home.address.trim() || '',
+        name: home.name.trim(),
+        address: home.address.trim(),
         electricity: updatedElectricity,
         shareholders: updatedShareholders,
         rent: updatedRent,

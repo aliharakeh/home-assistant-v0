@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "fbc9ee13-b021-406d-b8bd-42bd62aae40b",
+  "id": "c96f56be-99bd-46a4-b765-3aefe3a70df9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "electricity_bill": {
@@ -23,7 +23,7 @@
         },
         "date": {
           "name": "date",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

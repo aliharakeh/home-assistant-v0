@@ -49,11 +49,7 @@ export default function HomeDetailsScreen() {
     return (
         <SafeAreaView className="flex-1">
             <ScrollView className="p-4">
-                <ElectricityInfo
-                    home={currentHome}
-                    bills={electricityBills}
-                    onAddBill={handleAddBill}
-                />
+                <ElectricityInfo home={currentHome} bills={electricityBills} />
             </ScrollView>
 
             <TouchableOpacity

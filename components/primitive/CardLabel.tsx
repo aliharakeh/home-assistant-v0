@@ -10,9 +10,7 @@ export function CardLabel(p: CardLabelProps) {
     const value = Array.isArray(p.value) ? p.value : [p.value];
     return (
         <View className={`flex-row gap-2 w-full ${p.rtl ? 'flex-row-reverse' : ''}`}>
-            <Text className={`font-semibold w-[120px] ${p.rtl ? 'text-right' : ''}`}>
-                {p.label}
-            </Text>
+            <Text className={`font-semibold w-[50%] ${p.rtl ? 'text-right' : ''}`}>{p.label}</Text>
 
             <View className={p.rtl ? 'flex-1 items-end' : 'flex-1'}>
                 {value.map((v, i) => (

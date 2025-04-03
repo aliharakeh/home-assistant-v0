@@ -12,7 +12,7 @@ interface ElectricityFormProps {
 
 export default function ElectricityForm({ home, setHome }: ElectricityFormProps) {
     const { t } = useTranslation();
-    
+
     const handleRemove = (indexToRemove: number) => {
         setHome({
             ...home,
@@ -53,7 +53,7 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
 
     return (
         <View>
-            <Text className="title mt-3 mb-2">{t('Electricity')}</Text>
+            <Text className="title mt-4 mb-2">{t('Electricity')}</Text>
 
             <InputWithLabel
                 label={t('Clock Code')}
@@ -70,7 +70,7 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
             </View>
 
             {home.electricity.subsriptions.map((subsription, i) => (
-                <View key={i} className="flex-row items-center mb-2.5">
+                <View key={i} className="flex-row items-center mb-2">
                     <TextInput
                         className="input w-[60%]"
                         value={subsription.name}

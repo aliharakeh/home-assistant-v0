@@ -11,7 +11,7 @@ interface ShareholderFormProps {
 
 export default function ShareholderForm({ home, setHome }: ShareholderFormProps) {
     const { t } = useTranslation();
-    
+
     const handleRemove = (indexToRemove: number) => {
         if (home.shareholders.length <= 1) {
             Alert.alert(t('Error'), t('At least one shareholder is required.'));
@@ -25,7 +25,7 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
 
     return (
         <>
-            <View className="flex-row items-center justify-between mt-3 mb-2">
+            <View className="flex-row items-center justify-between mt-8 mb-2">
                 <Text className="title">{t('Shareholders')}</Text>
                 <TouchableOpacity
                     onPress={() =>
@@ -40,7 +40,7 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
             </View>
 
             {home.shareholders.map((shareholder, i) => (
-                <View key={i} className="flex-row items-center">
+                <View key={i} className="flex-row items-center mb-2">
                     <TextInput
                         className="input w-[60%]"
                         value={shareholder.name}
@@ -57,12 +57,12 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
 
                     <TextInput
                         className="input w-[30%] ml-1"
-                        value={shareholder.shareValue.toString()}
+                        value={shareholder.shareValue ? shareholder.shareValue.toString() : ''}
                         onChangeText={text =>
                             setHome({
                                 ...home,
                                 shareholders: home.shareholders.map((s, index) =>
-                                    index === i ? { ...s, shareValue: parseFloat(text) } : s
+                                    index === i ? { ...s, shareValue: parseFloat(text || '0') } : s
                                 ),
                             })
                         }

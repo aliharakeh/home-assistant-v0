@@ -1,7 +1,7 @@
 CREATE TABLE `electricity_bill` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`homeId` integer,
-	`date` text,
+	`date` integer,
 	`amount` real,
 	`subsription_type` text,
 	FOREIGN KEY (`homeId`) REFERENCES `home`(`id`) ON UPDATE no action ON DELETE cascade

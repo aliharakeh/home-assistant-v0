@@ -14,7 +14,7 @@ export const HomeTable = sqliteTable('home', {
 export const ElectricityBillTable = sqliteTable('electricity_bill', {
     id: int('id').primaryKey({ autoIncrement: true }),
     homeId: int('homeId').references(() => HomeTable.id, { onDelete: 'cascade' }),
-    date: text('date'),
+    date: int('date'),
     amount: real('amount'),
     subsription_type: text('subsription_type'),
 });
