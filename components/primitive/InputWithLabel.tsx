@@ -1,3 +1,4 @@
+import { useRTL } from '@/hooks/useRTL';
 import { KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
 
 export interface InputWithLabelProps {
@@ -9,11 +10,13 @@ export interface InputWithLabelProps {
 }
 
 export function InputWithLabel(p: InputWithLabelProps) {
+    const { columnContainerRTL, textRTL } = useRTL();
+
     return (
-        <View className="w-full gap-1 my-1">
-            <Text className="label">{p.label}</Text>
+        <View className={`w-full gap-1 my-1 ${columnContainerRTL}`}>
+            <Text className={`label ${textRTL}`}>{p.label}</Text>
             <TextInput
-                className="input"
+                className={`input ${textRTL}`}
                 value={p.value}
                 onChangeText={p.onChangeText}
                 placeholder={p.placeholder}

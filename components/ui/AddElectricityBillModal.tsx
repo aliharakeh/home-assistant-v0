@@ -1,5 +1,6 @@
 import { CheckboxGroup } from '@/components/primitive/CheckboxGroup';
 import { ElectricityBill, Home } from '@/db/models';
+import { useRTL } from '@/hooks/useRTL';
 import { Ionicons } from '@expo/vector-icons';
 import { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import React from 'react';
@@ -20,6 +21,7 @@ export default function AddElectricityBillModal({
     home,
 }: AddElectricityBillModalProps) {
     const { t } = useTranslation();
+    const { containerRTL } = useRTL();
 
     const [billDate, setBillDate] = React.useState(new Date());
     const [billAmount, setBillAmount] = React.useState('');
@@ -44,8 +46,8 @@ export default function AddElectricityBillModal({
                 <View className="bg-white rounded-lg p-6 w-5/6 shadow-lg">
                     <Text className="title mb-4 text-center">{t('Add New Electricity Bill')}</Text>
 
-                    <View className="flex-row items-center gap-2 mb-2">
-                        <Text className="label">{t('Date')} :</Text>
+                    <View className={`flex-row items-center gap-2 mb-2 ${containerRTL}`}>
+                        <Text className="label">{t('Date')}</Text>
 
                         <Text className="label">{billDate.toLocaleDateString()}</Text>
 

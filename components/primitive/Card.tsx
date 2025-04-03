@@ -13,17 +13,15 @@ export function Card(p: CardProps) {
     const withBorder = p.withBorder ?? true;
     const borderClass = withBorder ? 'p-4 mb-4 border border-gray-300 rounded-xl shadow-sm' : '';
 
+    const content = <View className={`bg-white ${borderClass} ${p.className} `}>{p.children}</View>;
+
     if (p.clickable) {
         return (
-            <TouchableOpacity
-                className={`bg-white ${borderClass} ${p.className}`}
-                onPress={p.onPress}
-                activeOpacity={p.touchOpacity}
-            >
-                {p.children}
+            <TouchableOpacity onPress={p.onPress} activeOpacity={p.touchOpacity}>
+                {content}
             </TouchableOpacity>
         );
     }
 
-    return <View className={`bg-white ${borderClass} ${p.className}`}>{p.children}</View>;
+    return content;
 }

@@ -1,3 +1,4 @@
+import { useRTL } from '@/hooks/useRTL';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
@@ -7,13 +8,13 @@ import { deleteHome } from '../../db/db';
 import { Home } from '../../db/models';
 import { Card } from '../primitive/Card';
 import { CardLabel } from '../primitive/CardLabel';
-
 interface HomeCardProps {
     home: Home;
 }
 
 export default function HomeCard({ home }: HomeCardProps) {
     const { t } = useTranslation();
+    const { containerRTL, textRTL } = useRTL();
 
     const shareholderNames =
         home.shareholders.length > 0 ? home.shareholders.map(shareholder => shareholder.name) : '-';
@@ -55,10 +56,10 @@ export default function HomeCard({ home }: HomeCardProps) {
 
     return (
         <Card clickable onPress={handlePress} touchOpacity={0.7}>
-            <View className="flex-row justify-between items-center">
-                <Text className="text-2xl font-semibold">{home.name}</Text>
+            <View className={`flex-row justify-between items-center ${containerRTL}`}>
+                <Text className={`text-2xl font-semibold ${textRTL}`}>{home.name}</Text>
 
-                <View className="flex-row gap-2">
+                <View className={`flex-row gap-2 ${containerRTL}`}>
                     <TouchableOpacity
                         className="bg-blue-100 rounded-md p-2"
                         onPress={handleEditPress}
@@ -77,7 +78,7 @@ export default function HomeCard({ home }: HomeCardProps) {
                 </View>
             </View>
 
-            <Text className="text-gray-500 mb-3">{home.address}</Text>
+            <Text className={`text-gray-500 mb-3 w-full ${textRTL}`}>{home.address}</Text>
 
             <CardLabel label={t('Electricity Clock Code')} value={home.electricity.clock_code} />
 

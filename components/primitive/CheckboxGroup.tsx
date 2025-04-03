@@ -1,3 +1,4 @@
+import { useRTL } from '@/hooks/useRTL';
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -10,9 +11,13 @@ interface CheckboxGroupProps {
 }
 
 export function CheckboxGroup({ options, getValue, getLabel, onChange }: CheckboxGroupProps) {
+    const { containerRTL } = useRTL();
     const [selectedValue, setSelectedValue] = useState(getValue(options[0]));
+
     return (
-        <View className="flex-row flex-wrap items-center justify-start gap-4 w-full">
+        <View
+            className={`flex-row flex-wrap items-center justify-start gap-4 w-full ${containerRTL}`}
+        >
             {options.map(o => {
                 const value = getValue(o);
                 const label = getLabel(o);

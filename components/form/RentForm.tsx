@@ -1,4 +1,5 @@
 import { Home } from '@/db/models';
+import { useRTL } from '@/hooks/useRTL';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
@@ -11,10 +12,11 @@ interface RentFormProps {
 
 export default function RentForm({ home, setHome }: RentFormProps) {
     const { t } = useTranslation();
+    const { columnContainerRTL, containerRTL, textRTL } = useRTL();
 
     return (
-        <View className="mt-4">
-            <Text className="title mt-4">{t('Rent Details')}</Text>
+        <View className={`mt-4 ${columnContainerRTL}`}>
+            <Text className={`title mt-4 ${textRTL}`}>{t('Rent Details')}</Text>
 
             <InputWithLabel
                 label={t('Tenant Name')}
@@ -25,7 +27,7 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                 placeholder={t('Tenant Name')}
             />
 
-            <View className="flex-row">
+            <View className={`flex-row ${containerRTL}`}>
                 <View className="flex-1 mr-2">
                     <InputWithLabel
                         label={t('Amount')}
@@ -43,6 +45,7 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                         keyboardType="numeric"
                     />
                 </View>
+
                 <View className="flex-1">
                     <InputWithLabel
                         label={t('Currency')}
@@ -61,7 +64,7 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                 </View>
             </View>
 
-            <View className="flex-row">
+            <View className={`flex-row ${containerRTL}`}>
                 <View className="flex-1 mr-2">
                     <InputWithLabel
                         label={t('Rent Payment Duration')}

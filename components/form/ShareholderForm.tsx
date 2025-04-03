@@ -1,4 +1,5 @@
 import { Home } from '@/db/models';
+import { useRTL } from '@/hooks/useRTL';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +12,7 @@ interface ShareholderFormProps {
 
 export default function ShareholderForm({ home, setHome }: ShareholderFormProps) {
     const { t } = useTranslation();
+    const { containerRTL } = useRTL();
 
     const handleRemove = (indexToRemove: number) => {
         if (home.shareholders.length <= 1) {
@@ -25,7 +27,7 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
 
     return (
         <>
-            <View className="flex-row items-center justify-between mt-8 mb-2">
+            <View className={`flex-row items-center justify-between mt-8 mb-2 ${containerRTL}`}>
                 <Text className="title">{t('Shareholders')}</Text>
                 <TouchableOpacity
                     onPress={() =>
@@ -40,7 +42,7 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
             </View>
 
             {home.shareholders.map((shareholder, i) => (
-                <View key={i} className="flex-row items-center mb-2">
+                <View key={i} className={`flex-row items-center mb-2 ${containerRTL}`}>
                     <TextInput
                         className="input w-[60%]"
                         value={shareholder.name}

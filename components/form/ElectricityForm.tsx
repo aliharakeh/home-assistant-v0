@@ -1,4 +1,5 @@
 import { Home } from '@/db/models';
+import { useRTL } from '@/hooks/useRTL';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +13,7 @@ interface ElectricityFormProps {
 
 export default function ElectricityForm({ home, setHome }: ElectricityFormProps) {
     const { t } = useTranslation();
+    const { containerRTL, textRTL } = useRTL();
 
     const handleRemove = (indexToRemove: number) => {
         setHome({
@@ -53,7 +55,7 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
 
     return (
         <View>
-            <Text className="title mt-4 mb-2">{t('Electricity')}</Text>
+            <Text className={`title mt-4 mb-2 ${textRTL}`}>{t('Electricity')}</Text>
 
             <InputWithLabel
                 label={t('Clock Code')}
@@ -62,7 +64,7 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
                 placeholder={t('Electricity Address Code')}
             />
 
-            <View className="flex-row items-center justify-between mt-2.5">
+            <View className={`flex-row items-center justify-between mt-2.5 ${containerRTL}`}>
                 <Text className="label">{t('Electricity Subsriptions')}</Text>
                 <TouchableOpacity onPress={handleAdd}>
                     <Ionicons name="add-circle-outline" size={28} color="#007AFF" />
@@ -70,16 +72,16 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
             </View>
 
             {home.electricity.subsriptions.map((subsription, i) => (
-                <View key={i} className="flex-row items-center mb-2">
+                <View key={i} className={`flex-row items-center mb-2 ${containerRTL}`}>
                     <TextInput
-                        className="input w-[60%]"
+                        className={`input w-[60%] ${textRTL}`}
                         value={subsription.name}
                         onChangeText={text => handleChange(i, 'name', text)}
                         placeholder={`${t('Subsription')} ${i + 1}`}
                     />
 
                     <TextInput
-                        className="input w-[30%] ml-1"
+                        className={`input w-[30%] ml-1 ${textRTL}`}
                         value={subsription.currency}
                         onChangeText={text => handleChange(i, 'currency', text)}
                         placeholder={t('Currency')}
