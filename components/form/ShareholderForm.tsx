@@ -54,7 +54,7 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
                                 ),
                             })
                         }
-                        placeholder={`${t('Shareholder')} ${i + 1} ${t('Name')}`}
+                        placeholder={t('Shareholder Name')}
                     />
 
                     <TextInput

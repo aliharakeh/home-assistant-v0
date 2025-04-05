@@ -39,7 +39,6 @@ i18n.use(initReactI18next).init({
 
                 // Electricity
                 'Electricity Clock Code': 'Electricity Clock Code',
-                'Electricity Address Code': 'Electricity Address Code',
                 'Subscription Types': 'Subscription Types',
                 'Add New Electricity Bill': 'Add New Electricity Bill',
                 Subscription: 'Subscription',
@@ -49,6 +48,7 @@ i18n.use(initReactI18next).init({
                 Shareholders: 'Shareholders',
                 Shareholder: 'Shareholder',
                 Share: 'Share',
+                'Shareholder Name': 'Shareholder Name',
 
                 // Form Placeholders
                 'e.g., Monthly, Yearly': 'e.g., Monthly, Yearly',
@@ -64,9 +64,9 @@ i18n.use(initReactI18next).init({
                 Cancel: 'إلغاء',
                 Save: 'حفظ',
                 Amount: 'المبلغ',
-                Amount_PH: 'e.g. 100, 1000',
+                Amount_PH: 'e.g., 100, 1000',
                 Currency: 'العملة',
-                Currency_PH: 'e.g. $ , L.L.',
+                Currency_PH: 'e.g., $ , L.L.',
                 Name: 'الاسم',
                 Address: 'العنوان',
                 Error: 'خطأ',
@@ -96,16 +96,19 @@ i18n.use(initReactI18next).init({
 
                 // Electricity
                 'Electricity Clock Code': 'رمز عداد الكهرباء',
-                'Electricity Address Code': 'رمز عنوان الكهرباء',
                 'Subscription Types': 'أنواع الاشتراكات',
                 'Add New Electricity Bill': 'إضافة فاتورة كهرباء جديدة',
                 Subscription: 'اشتراك',
                 'Save Bill': 'حفظ الفاتورة',
+                'Clock Code': 'رمز العداد',
+                'Electiricity Subscriptions': 'اشتراكات الكهرباء',
+                main: 'شركة',
 
                 // Shareholders
-                Shareholders: 'المساهمون',
-                Shareholder: 'مساهم',
-                Share: 'حصة',
+                Shareholders: 'المستفيدون',
+                Shareholder: 'المستفيد',
+                Share: 'الحصة',
+                'Shareholder Name': 'اسم المستفيد',
 
                 // Form Placeholders
                 'e.g., Monthly, Yearly': 'مثال: شهري، سنوي',

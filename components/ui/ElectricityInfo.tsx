@@ -30,7 +30,7 @@ export default function ElectricityInfo({ home, bills }: ElectricityInfoProps) {
         <Card>
             <CardLabel
                 label={t('Electricity Clock Code')}
-                value={home.electricity.clock_code || ''}
+                value={home.electricity.clock_code || '-'}
             />
 
             <CardLabel label={t('Subscription Types')} value={subsriptionTypes} />

@@ -1,5 +1,4 @@
 import HomeCard from '@/components/ui/HomeCard';
-import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 import { getAllHomes } from '@/db/db';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect } from 'expo-router';
@@ -26,9 +25,6 @@ export default function IndexScreen() {
 
     return (
         <SafeAreaView className="flex-1">
-            <View className="flex-row justify-end px-4 py-2">
-                <LanguageSwitcher />
-            </View>
             <ScrollView>
                 <View className="p-4">
                     {homeData.map(home => (

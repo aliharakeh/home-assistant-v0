@@ -16,8 +16,13 @@ export default function HomeCard({ home }: HomeCardProps) {
     const { t } = useTranslation();
     const { containerRTL, textRTL } = useRTL();
 
+    const emptyShareholders = home.shareholders.length === 0;
+    const emptyFirstShareholder =
+        home.shareholders.length === 1 && home.shareholders[0].name === '';
     const shareholderNames =
-        home.shareholders.length > 0 ? home.shareholders.map(shareholder => shareholder.name) : '-';
+        emptyShareholders || emptyFirstShareholder
+            ? '-'
+            : home.shareholders.map(shareholder => shareholder.name);
 
     const handlePress = () => router.push(`/${home.id}`);
 
@@ -57,7 +62,7 @@ export default function HomeCard({ home }: HomeCardProps) {
     return (
         <Card clickable onPress={handlePress} touchOpacity={0.7}>
             <View className={`flex-row justify-between items-center ${containerRTL}`}>
-                <Text className={`text-2xl font-semibold ${textRTL}`}>{home.name}</Text>
+                <Text className={`text-2xl font-semibold ${textRTL}`}>{home.name || '-'}</Text>
 
                 <View className={`flex-row gap-2 ${containerRTL}`}>
                     <TouchableOpacity
@@ -78,9 +83,12 @@ export default function HomeCard({ home }: HomeCardProps) {
                 </View>
             </View>
 
-            <Text className={`text-gray-500 mb-3 w-full ${textRTL}`}>{home.address}</Text>
+            <Text className={`text-gray-500 mb-3 w-full ${textRTL}`}>{home.address || '-'}</Text>
 
-            <CardLabel label={t('Electricity Clock Code')} value={home.electricity.clock_code} />
+            <CardLabel
+                label={t('Electricity Clock Code')}
+                value={home.electricity.clock_code || '-'}
+            />
 
             <CardLabel label={t('Shareholders')} value={shareholderNames} />
 
