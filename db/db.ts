@@ -82,14 +82,14 @@ export async function updateHome(home: Home) {
     }
 }
 
-export async function getElectricityBills(homeId: number): Promise<ElectricityBill[]> {
+export async function getElectricityBills(homeId: number, limit = 12): Promise<ElectricityBill[]> {
     try {
         const data = await db
             .select()
             .from(schema.ElectricityBillTable)
             .where(eq(schema.ElectricityBillTable.homeId, homeId))
             .orderBy(desc(schema.ElectricityBillTable.date))
-            .limit(12);
+            .limit(limit);
         return data?.reverse() as ElectricityBill[];
     } catch (error) {
         console.log('error getting electricity bills', error);
@@ -103,7 +103,7 @@ export async function insertElectricityBill(homeId: number, bill: ElectricityBil
             homeId,
             date: bill.date,
             amount: bill.amount,
-            subsription_type: bill.subsription_type,
+            subscription_type: bill.subscription_type,
         });
     } catch (error) {
         console.log('error inserting bill', error);

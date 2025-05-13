@@ -20,14 +20,14 @@ export const RentSchema = z.object({
     lastPaymentDate: z.string(),
 });
 
-export const SubsriptionTypeSchema = z.object({
+export const SubscriptionTypeSchema = z.object({
     name: z.string(),
     currency: z.string(),
 });
 
 export const ElectricitySchema = z.object({
     clock_code: z.string(),
-    subsriptions: z.array(SubsriptionTypeSchema),
+    subscriptions: z.array(SubscriptionTypeSchema),
 });
 
 export const ElectricityBillSchema = z.object({
@@ -35,7 +35,7 @@ export const ElectricityBillSchema = z.object({
     homeId: z.number().optional(),
     date: z.number(),
     amount: z.number(),
-    subsription_type: z.string(),
+    subscription_type: z.string(),
 });
 
 export const HomeSchema = z.object({
@@ -54,7 +54,7 @@ export type Rent = z.infer<typeof RentSchema>;
 export type Tenant = z.infer<typeof TenantSchema>;
 export type Electricity = z.infer<typeof ElectricitySchema>;
 export type ElectricityBill = z.infer<typeof ElectricityBillSchema>;
-export type SubsriptionType = z.infer<typeof SubsriptionTypeSchema>;
+export type SubscriptionType = z.infer<typeof SubscriptionTypeSchema>;
 
 export function validateHome(home: Home): Home | null {
     const result = HomeSchema.safeParse(home);
@@ -77,9 +77,9 @@ export function validateElectricityBill(bill: ElectricityBill): ElectricityBill 
 export function getUpdatedHome(home: Home): Home {
     const updatedElectricity: Electricity = {
         clock_code: home.electricity.clock_code.trim(),
-        subsriptions: home.electricity.subsriptions.map(subsription => ({
-            name: subsription.name.trim(),
-            currency: subsription.currency.trim(),
+        subscriptions: home.electricity.subscriptions.map(subscription => ({
+            name: subscription.name.trim(),
+            currency: subscription.currency.trim(),
         })),
     };
 

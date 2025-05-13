@@ -14,15 +14,15 @@ interface ElectricityInfoProps {
 export default function ElectricityInfo({ home, bills }: ElectricityInfoProps) {
     const { t } = useTranslation();
 
-    const subsriptionTypes = home.electricity.subsriptions
-        ? home.electricity.subsriptions.map(
+    const subscriptionTypes = home.electricity.subscriptions
+        ? home.electricity.subscriptions.map(
               s => `${s?.name} ${s.currency ? `(${s.currency})` : ''}`
           )
         : '-';
 
     const groupedBills = bills.reduce((acc, bill) => {
-        acc[bill.subsription_type] = acc[bill.subsription_type] || [];
-        acc[bill.subsription_type].push(bill);
+        acc[bill.subscription_type] = acc[bill.subscription_type] || [];
+        acc[bill.subscription_type].push(bill);
         return acc;
     }, {} as Record<string, ElectricityBill[]>);
 
@@ -33,11 +33,11 @@ export default function ElectricityInfo({ home, bills }: ElectricityInfoProps) {
                 value={home.electricity.clock_code || '-'}
             />
 
-            <CardLabel label={t('Subscription Types')} value={subsriptionTypes} />
+            <CardLabel label={t('Subscription Types')} value={subscriptionTypes} />
 
-            {Object.entries(groupedBills).map(([subsriptionType, bills]) => (
-                <View key={subsriptionType} style={{ marginTop: 20 }}>
-                    <Text className="title mb-4">{subsriptionType}</Text>
+            {Object.entries(groupedBills).map(([subscriptionType, bills]) => (
+                <View key={subscriptionType} style={{ marginTop: 20 }}>
+                    <Text className="title mb-4">{subscriptionType}</Text>
 
                     <LineChart
                         initialSpacing={10}
@@ -45,7 +45,7 @@ export default function ElectricityInfo({ home, bills }: ElectricityInfoProps) {
                         rotateLabel
                         height={200}
                         labelsExtraHeight={45}
-                        xAxisLabelsVerticalShift={15}
+                        xAxisLabelsVerticalShift={20}
                         yAxisOffset={bills.reduce(
                             (acc, bill) => Math.min(acc, bill.amount),
                             bills[0].amount

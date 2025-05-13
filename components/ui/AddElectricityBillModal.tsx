@@ -25,19 +25,19 @@ export default function AddElectricityBillModal({
 
     const [billDate, setBillDate] = React.useState(new Date());
     const [billAmount, setBillAmount] = React.useState('');
-    const [billSubsriptionType, setBillSubsriptionType] = React.useState(
-        home.electricity.subsriptions?.[0]?.name ?? ''
+    const [billSubscriptionType, setBillSubscriptionType] = React.useState(
+        home.electricity.subscriptions?.[0]?.name ?? ''
     );
 
     const handleSave = () => {
         onSave({
             date: billDate.getTime(),
             amount: parseFloat(billAmount),
-            subsription_type: billSubsriptionType,
+            subscription_type: billSubscriptionType,
         });
         setBillDate(new Date());
         setBillAmount('');
-        setBillSubsriptionType('');
+        setBillSubscriptionType('');
     };
 
     return (
@@ -78,10 +78,10 @@ export default function AddElectricityBillModal({
 
                     <View className="my-3">
                         <CheckboxGroup
-                            options={home.electricity.subsriptions}
+                            options={home.electricity.subscriptions}
                             getValue={s => s?.name}
                             getLabel={s => `${s?.name} ${s.currency ? `(${s.currency})` : ''}`}
-                            onChange={setBillSubsriptionType}
+                            onChange={setBillSubscriptionType}
                         />
                     </View>
 

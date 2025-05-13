@@ -16,7 +16,7 @@ export const ElectricityBillTable = sqliteTable('electricity_bill', {
     homeId: int('homeId').references(() => HomeTable.id, { onDelete: 'cascade' }),
     date: int('date'),
     amount: real('amount'),
-    subsription_type: text('subsription_type'),
+    subscription_type: text('subscription_type'),
 });
 
 export const homeRelations = relations(HomeTable, ({ many }: any) => ({

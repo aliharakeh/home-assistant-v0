@@ -20,7 +20,7 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
             ...home,
             electricity: {
                 ...home.electricity,
-                subsriptions: home.electricity.subsriptions.filter(
+                subscriptions: home.electricity.subscriptions.filter(
                     (_, index) => index !== indexToRemove
                 ),
             },
@@ -32,7 +32,7 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
             ...home,
             electricity: {
                 ...home.electricity,
-                subsriptions: [...home.electricity.subsriptions, { name: '', currency: '' }],
+                subscriptions: [...home.electricity.subscriptions, { name: '', currency: '' }],
             },
         });
     };
@@ -42,7 +42,7 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
             ...home,
             electricity: {
                 ...home.electricity,
-                subsriptions: home.electricity.subsriptions.map((s, i) =>
+                subscriptions: home.electricity.subscriptions.map((s, i) =>
                     i === index ? { ...s, [key]: value } : s
                 ),
             },
@@ -71,18 +71,18 @@ export default function ElectricityForm({ home, setHome }: ElectricityFormProps)
                 </TouchableOpacity>
             </View>
 
-            {home.electricity.subsriptions.map((subsription, i) => (
+            {home.electricity.subscriptions.map((subscription, i) => (
                 <View key={i} className={`flex-row items-center mb-2 ${containerRTL}`}>
                     <TextInput
                         className={`input w-[60%] ${textRTL}`}
-                        value={subsription.name}
+                        value={subscription.name}
                         onChangeText={text => handleChange(i, 'name', text)}
                         placeholder={`${t('Subsription')} ${i + 1}`}
                     />
 
                     <TextInput
                         className={`input w-[30%] ml-1 ${textRTL}`}
-                        value={subsription.currency}
+                        value={subscription.currency}
                         onChangeText={text => handleChange(i, 'currency', text)}
                         placeholder={t('Currency')}
                         keyboardType="numeric"
