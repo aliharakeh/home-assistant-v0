@@ -3,7 +3,7 @@ CREATE TABLE `electricity_bill` (
 	`homeId` integer,
 	`date` integer,
 	`amount` real,
-	`subsription_type` text,
+	`subscription_type` text,
 	FOREIGN KEY (`homeId`) REFERENCES `home`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint

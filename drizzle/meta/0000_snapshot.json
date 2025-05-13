@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c96f56be-99bd-46a4-b765-3aefe3a70df9",
+  "id": "17230198-d043-4307-a62d-1b11ab80a0f9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "electricity_bill": {
@@ -35,8 +35,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "subsription_type": {
-          "name": "subsription_type",
+        "subscription_type": {
+          "name": "subscription_type",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
