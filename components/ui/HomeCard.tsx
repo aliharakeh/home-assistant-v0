@@ -50,11 +50,6 @@ export default function HomeCard({ home }: HomeCardProps) {
                     label={t('Payment Schedule')}
                     value={home.rent.rentPaymentDuration || '-'}
                 />
-
-                <CardLabel
-                    label={t('Last Payment Date')}
-                    value={home.rent.lastPaymentDate || '-'}
-                />
             </>
         );
     }

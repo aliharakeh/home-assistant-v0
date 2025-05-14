@@ -17,7 +17,6 @@ export const RentSchema = z.object({
     }),
     tenant: TenantSchema,
     rentPaymentDuration: z.string(),
-    lastPaymentDate: z.string(),
 });
 
 export const SubscriptionTypeSchema = z.object({
@@ -95,7 +94,6 @@ export function getUpdatedHome(home: Home): Home {
             currency: home.rent.price.currency.trim(),
         },
         rentPaymentDuration: home.rent.rentPaymentDuration.trim(),
-        lastPaymentDate: home.rent.lastPaymentDate.trim(),
     };
 
     return {

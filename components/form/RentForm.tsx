@@ -64,29 +64,14 @@ export default function RentForm({ home, setHome }: RentFormProps) {
                 </View>
             </View>
 
-            <View className={`flex-row ${containerRTL}`}>
-                <View className="flex-1 mr-2">
-                    <InputWithLabel
-                        label={t('Rent Payment Duration')}
-                        value={home.rent.rentPaymentDuration}
-                        onChangeText={text =>
-                            setHome({ ...home, rent: { ...home.rent, rentPaymentDuration: text } })
-                        }
-                        placeholder={t('e.g., Monthly, Yearly')}
-                    />
-                </View>
-
-                <View className="flex-1">
-                    <InputWithLabel
-                        label={t('Last Payment Date')}
-                        value={home.rent.lastPaymentDate}
-                        onChangeText={text =>
-                            setHome({ ...home, rent: { ...home.rent, lastPaymentDate: text } })
-                        }
-                        placeholder={t('e.g., 2024-01-01')}
-                    />
-                </View>
-            </View>
+            <InputWithLabel
+                label={t('Rent Payment Duration')}
+                value={home.rent.rentPaymentDuration}
+                onChangeText={text =>
+                    setHome({ ...home, rent: { ...home.rent, rentPaymentDuration: text } })
+                }
+                placeholder={t('e.g., Monthly, Yearly')}
+            />
         </View>
     );
 }

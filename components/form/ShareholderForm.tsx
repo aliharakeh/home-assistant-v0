@@ -69,7 +69,6 @@ export default function ShareholderForm({ home, setHome }: ShareholderFormProps)
                             })
                         }
                         placeholder={`${t('Share')}`}
-                        keyboardType="numeric"
                     />
 
                     <TouchableOpacity
