@@ -46,6 +46,7 @@ import {
     Zap,
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { DateRange } from 'react-day-picker'
 
 interface ElectricityBillsDashboardProps {
     homeId: string
@@ -64,13 +65,7 @@ export function ElectricityBillsDashboard({
     const { toast } = useToast()
     const [showAddBill, setShowAddBill] = useState(false)
     const [expandedBillId, setExpandedBillId] = useState<string | null>(null)
-    const [dateRange, setDateRange] = useState<{
-        from: Date | undefined
-        to: Date | undefined
-    }>({
-        from: undefined,
-        to: undefined,
-    })
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
     const [isDateFilterActive, setIsDateFilterActive] = useState(false)
     const [billToDelete, setBillToDelete] = useState<string | null>(null)
     const [isDeleting, setIsDeleting] = useState(false)
@@ -78,7 +73,7 @@ export function ElectricityBillsDashboard({
 
     // Filter bills by date range if active
     const filteredBills = useMemo(() => {
-        if (!isDateFilterActive || !dateRange.from) {
+        if (!isDateFilterActive || !dateRange?.from) {
             return bills
         }
 
@@ -107,9 +102,9 @@ export function ElectricityBillsDashboard({
         setExpandedBillId(expandedBillId === billId ? null : billId)
     }
 
-    const handleDateRangeSelect = (range: { from: Date | undefined; to: Date | undefined }) => {
+    const handleDateRangeSelect = (range: DateRange | undefined) => {
         setDateRange(range)
-        if (range.from) {
+        if (range?.from) {
             setIsDateFilterActive(true)
         }
     }
@@ -179,7 +174,7 @@ export function ElectricityBillsDashboard({
                             <PopoverTrigger asChild>
                                 <Button variant="outline" size="sm" className="h-8 gap-1">
                                     <CalendarIcon className="h-3.5 w-3.5" />
-                                    {isDateFilterActive && dateRange.from ? (
+                                    {isDateFilterActive && dateRange?.from ? (
                                         <span>
                                             {format(dateRange.from, 'MMM d, yyyy')}
                                             {dateRange.to
@@ -222,7 +217,7 @@ export function ElectricityBillsDashboard({
                 </div>
 
                 <TabsContent value="all" className="space-y-4">
-                    {isDateFilterActive && dateRange.from && (
+                    {isDateFilterActive && dateRange?.from && (
                         <div className="bg-muted p-2 rounded-md text-sm text-center">
                             {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
                             {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
@@ -292,18 +287,10 @@ export function ElectricityBillsDashboard({
                                 {expandedBillId === bill.id && (
                                     <div className="p-4 pt-0 bg-muted/30">
                                         <div className="rounded-md bg-background p-3 text-sm">
-                                            <div className="mb-2">
-                                                <span className="font-medium">{t('billId')}:</span>{' '}
-                                                {bill.id}
+                                            <div>
+                                                <span className="font-medium">{t('notes')}:</span>{' '}
+                                                {bill.notes ?? '-'}
                                             </div>
-                                            {bill.notes && (
-                                                <div>
-                                                    <span className="font-medium">
-                                                        {t('notes')}:
-                                                    </span>{' '}
-                                                    {bill.notes}
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 )}
@@ -313,7 +300,7 @@ export function ElectricityBillsDashboard({
                 </TabsContent>
 
                 <TabsContent value="summary">
-                    {isDateFilterActive && dateRange.from && (
+                    {isDateFilterActive && dateRange?.from && (
                         <div className="bg-muted p-2 rounded-md text-sm text-center mb-4">
                             {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
                             {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
@@ -368,7 +355,7 @@ export function ElectricityBillsDashboard({
 
                 <TabsContent value="charts">
                     <div className="space-y-6">
-                        {isDateFilterActive && dateRange.from && (
+                        {isDateFilterActive && dateRange?.from && (
                             <div className="bg-muted p-2 rounded-md text-sm text-center">
                                 {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
                                 {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
@@ -392,7 +379,7 @@ export function ElectricityBillsDashboard({
                 </TabsContent>
 
                 <TabsContent value="yearly">
-                    {isDateFilterActive && dateRange.from && (
+                    {isDateFilterActive && dateRange?.from && (
                         <div className="bg-muted p-2 rounded-md text-sm text-center mb-4">
                             {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
                             {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
