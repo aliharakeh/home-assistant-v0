@@ -1,15 +1,14 @@
 'use client'
 
-import { ChevronRight, HomeIcon, User, Users, Zap } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { useLanguage } from '@/contexts/language-context'
 import type { Home } from '@/lib/data'
 import { formatRent, formatShareholderAmount } from '@/lib/data'
+import { ChevronRight, HomeIcon, User, Users, Zap } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 
 interface HomeCardProps extends Home {}
 

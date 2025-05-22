@@ -1,22 +1,5 @@
 'use client'
 
-import {
-    AlertCircle,
-    ArrowLeft,
-    Calendar,
-    DollarSign,
-    Edit,
-    Home,
-    MapPin,
-    Trash2,
-    User,
-    Users,
-    Zap,
-} from 'lucide-react'
-import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -33,6 +16,22 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+    AlertCircle,
+    ArrowLeft,
+    Calendar,
+    DollarSign,
+    Edit,
+    Home,
+    MapPin,
+    Trash2,
+    User,
+    Users,
+    Zap,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 import { ElectricityBillsDashboard } from '@/components/electricity-bills-dashboard'
 import { LanguageSwitcher } from '@/components/language-switcher'
