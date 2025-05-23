@@ -96,13 +96,6 @@ export function ElectricityBillsDashboard({
         setIsDateFilterActive(true)
     }
 
-    const clearDateFilter = () => {
-        const now = new Date()
-        setStartDate(`${now.getFullYear()}-01-01`)
-        setEndDate(today)
-        setIsDateFilterActive(true)
-    }
-
     const handleDeleteBill = async () => {
         if (!billToDelete) return
 
@@ -127,11 +120,7 @@ export function ElectricityBillsDashboard({
 
     return (
         <div dir={dir}>
-            <div
-                className={`flex items-center justify-between mb-4 ${
-                    dir === 'rtl' ? 'flex-row-reverse' : ''
-                }`}
-            >
+            <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold flex items-center gap-2">
                     <Zap className="h-5 w-5" />
                     {t('electricityBills')}
@@ -160,7 +149,7 @@ export function ElectricityBillsDashboard({
             </div>
 
             <Tabs defaultValue="all" className="w-full">
-                <TabsList dir={dir} className={`grid grid-cols-4 ${dir === 'rtl' ? 'rtl' : ''}`}>
+                <TabsList dir={dir} className={`grid grid-cols-4`}>
                     <TabsTrigger value="all" className={dir === 'rtl' ? 'text-right' : ''}>
                         {t('allBills')}
                     </TabsTrigger>
@@ -175,11 +164,7 @@ export function ElectricityBillsDashboard({
                     </TabsTrigger>
                 </TabsList>
 
-                <div
-                    className={`flex items-center justify-between gap-2 mt-3 ${
-                        dir === 'rtl' ? 'flex-row-reverse' : ''
-                    }`}
-                >
+                <div className="flex justify-center mt-3">
                     <div
                         className={`flex items-end gap-4 ${
                             dir === 'rtl' ? 'flex-row-reverse' : ''
@@ -213,21 +198,12 @@ export function ElectricityBillsDashboard({
                                 max={today}
                             />
                         </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={clearDateFilter}
-                            className={`h-8 self-end ${dir === 'rtl' ? 'ml-0 mr-auto' : ''}`}
-                            disabled={!isDateFilterActive}
-                        >
-                            {t('clear')}
-                        </Button>
                     </div>
                 </div>
 
                 <TabsContent value="all" className="space-y-4 mt-3">
                     {isDateFilterActive && startDate && (
-                        <div className="bg-muted p-2 rounded-md text-sm text-center">
+                        <div dir={dir} className="bg-muted p-2 rounded-md text-sm text-center">
                             {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
                             {endDate
                                 ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
@@ -244,11 +220,7 @@ export function ElectricityBillsDashboard({
                         sortedBills.map(bill => (
                             <Card key={bill.id} className="overflow-hidden">
                                 <CardHeader className="p-4 pb-0">
-                                    <div
-                                        className={`flex items-center justify-between ${
-                                            dir === 'rtl' ? 'flex-row-reverse' : ''
-                                        }`}
-                                    >
+                                    <div dir={dir} className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <Lightbulb className="h-4 w-4 text-muted-foreground" />
                                             <CardTitle className="text-base">
@@ -259,17 +231,13 @@ export function ElectricityBillsDashboard({
                                             {getSubscriptionTypeLabel(bill.subscriptionType, t)}
                                         </Badge>
                                     </div>
-                                    <div
-                                        className={`flex items-center gap-1 mt-1 ${
-                                            dir === 'rtl' ? 'flex-row-reverse' : ''
-                                        }`}
-                                    >
+                                    <div dir={dir} className={`flex items-center gap-1 mt-1`}>
                                         <CalendarDays className="h-3 w-3" />
                                         {formatDate(bill.date)}
                                     </div>
                                 </CardHeader>
                                 <CardContent className="p-4 pt-2">
-                                    <div className="text-sm">
+                                    <div dir={dir} className="text-sm">
                                         <span className="text-muted-foreground">
                                             {t('subscriptionType')}:
                                         </span>{' '}
@@ -310,7 +278,7 @@ export function ElectricityBillsDashboard({
                                 </CardFooter>
 
                                 {expandedBillId === bill.id && (
-                                    <div className="p-4 pt-0 bg-muted/30">
+                                    <div dir={dir} className="p-4 pt-0 bg-muted/30">
                                         <div className="rounded-md bg-background p-3 text-sm">
                                             <div>
                                                 <span className="font-medium">{t('notes')}:</span>{' '}
