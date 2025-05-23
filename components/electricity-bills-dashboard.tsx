@@ -6,7 +6,6 @@ import { YearlyPieChart } from '@/components/charts/yearly-pie-chart'
 import { DeleteBillsDialog } from '@/components/delete-bills-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import {
     Card,
     CardContent,
@@ -23,7 +22,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
 import { useLanguage } from '@/contexts/language-context'
@@ -34,18 +34,8 @@ import {
     getSubscriptionTypeLabel,
 } from '@/lib/data'
 import { format } from 'date-fns'
-import {
-    CalendarDays,
-    CalendarIcon,
-    ChevronDown,
-    ChevronUp,
-    Lightbulb,
-    Plus,
-    Trash2,
-    Zap,
-} from 'lucide-react'
+import { CalendarDays, ChevronDown, ChevronUp, Lightbulb, Plus, Trash2, Zap } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { DateRange } from 'react-day-picker'
 
 interface ElectricityBillsDashboardProps {
     homeId: string
@@ -64,29 +54,36 @@ export function ElectricityBillsDashboard({
     const { toast } = useToast()
     const [showAddBill, setShowAddBill] = useState(false)
     const [expandedBillId, setExpandedBillId] = useState<string | null>(null)
-    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
-    const [isDateFilterActive, setIsDateFilterActive] = useState(false)
+    const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD format
+    const [startDate, setStartDate] = useState<string>(() => {
+        const now = new Date()
+        return `${now.getFullYear()}-01-01` // First day of current year
+    })
+    const [endDate, setEndDate] = useState<string>(today)
+    const [isDateFilterActive, setIsDateFilterActive] = useState(true)
     const [billToDelete, setBillToDelete] = useState<string | null>(null)
     const [isDeleting, setIsDeleting] = useState(false)
     const [showDeleteRangeDialog, setShowDeleteRangeDialog] = useState(false)
 
     // Filter bills by date range if active
     const filteredBills = useMemo(() => {
-        if (!isDateFilterActive || !dateRange?.from) {
+        if (!isDateFilterActive || !startDate) {
             return bills
         }
 
+        const start = new Date(startDate)
+        const end = endDate ? new Date(endDate) : new Date()
+
+        // Set end date to end of day
+        if (endDate) end.setHours(23, 59, 59, 999)
+
         return bills.filter(bill => {
             const billDate = new Date(bill.date)
-            if (dateRange.from && billDate < dateRange.from) {
-                return false
-            }
-            if (dateRange.to && billDate > dateRange.to) {
-                return false
-            }
+            if (billDate < start) return false
+            if (endDate && billDate > end) return false
             return true
         })
-    }, [bills, dateRange, isDateFilterActive])
+    }, [bills, startDate, endDate, isDateFilterActive])
 
     const totals = calculateTotalBills(filteredBills)
 
@@ -101,16 +98,16 @@ export function ElectricityBillsDashboard({
         setExpandedBillId(expandedBillId === billId ? null : billId)
     }
 
-    const handleDateRangeSelect = (range: DateRange | undefined) => {
-        setDateRange(range)
-        if (range?.from) {
-            setIsDateFilterActive(true)
-        }
+    const handleDateChange = () => {
+        // Always keep the filter active since we have a default start date
+        setIsDateFilterActive(true)
     }
 
     const clearDateFilter = () => {
-        setDateRange({ from: undefined, to: undefined })
-        setIsDateFilterActive(false)
+        const now = new Date()
+        setStartDate(`${now.getFullYear()}-01-01`)
+        setEndDate(today)
+        setIsDateFilterActive(true)
     }
 
     const handleDeleteBill = async () => {
@@ -169,51 +166,55 @@ export function ElectricityBillsDashboard({
                     </TabsList>
 
                     <div className="flex items-center justify-between gap-2">
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant="outline" size="sm" className="h-8 gap-1">
-                                    <CalendarIcon className="h-3.5 w-3.5" />
-                                    {isDateFilterActive && dateRange?.from ? (
-                                        <span>
-                                            {format(dateRange.from, 'MMM d, yyyy')}
-                                            {dateRange.to
-                                                ? ` - ${format(dateRange.to, 'MMM d, yyyy')}`
-                                                : ''}
-                                        </span>
-                                    ) : (
-                                        <span>{t('dateRange')}</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-
-                            <PopoverContent className="w-auto p-0" align="end">
-                                <Calendar
-                                    initialFocus
-                                    mode="range"
-                                    selected={dateRange}
-                                    onSelect={handleDateRangeSelect}
-                                    numberOfMonths={2}
+                        <div className="flex items-end gap-4">
+                            <div className="flex flex-col items-center gap-1">
+                                <Label htmlFor="start-date" className="text-xs text-center w-full">
+                                    {t('startDate')}
+                                </Label>
+                                <Input
+                                    id="start-date"
+                                    type="date"
+                                    value={startDate}
+                                    onChange={e => setStartDate(e.target.value)}
+                                    onBlur={handleDateChange}
+                                    className="h-9 w-40 text-sm"
                                 />
-                                <div className="p-3 border-t border-border">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={clearDateFilter}
-                                        className="w-full"
-                                    >
-                                        {t('clearFilter')}
-                                    </Button>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
+                            </div>
+                            <div className="flex flex-col items-center gap-1">
+                                <Label htmlFor="end-date" className="text-xs text-center w-full">
+                                    {t('endDate')}
+                                </Label>
+                                <Input
+                                    id="end-date"
+                                    type="date"
+                                    value={endDate}
+                                    onChange={e => setEndDate(e.target.value)}
+                                    onBlur={handleDateChange}
+                                    className="h-9 w-40 text-sm"
+                                    min={startDate}
+                                    max={today}
+                                />
+                            </div>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={clearDateFilter}
+                                className="h-8 self-end"
+                                disabled={!isDateFilterActive}
+                            >
+                                {t('clear')}
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
                 <TabsContent value="all" className="space-y-4">
-                    {isDateFilterActive && dateRange?.from && (
+                    {isDateFilterActive && startDate && (
                         <div className="bg-muted p-2 rounded-md text-sm text-center">
-                            {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
-                            {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
+                            {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
+                            {endDate
+                                ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
+                                : ` - ${t('now')}`}
                         </div>
                     )}
                     {sortedBills.length === 0 ? (
@@ -293,10 +294,12 @@ export function ElectricityBillsDashboard({
                 </TabsContent>
 
                 <TabsContent value="summary">
-                    {isDateFilterActive && dateRange?.from && (
+                    {isDateFilterActive && startDate && (
                         <div className="bg-muted p-2 rounded-md text-sm text-center mb-4">
-                            {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
-                            {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
+                            {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
+                            {endDate
+                                ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
+                                : ` - ${t('now')}`}
                         </div>
                     )}
                     <div className="grid grid-cols-1 gap-4">
@@ -348,10 +351,12 @@ export function ElectricityBillsDashboard({
 
                 <TabsContent value="charts">
                     <div className="space-y-6">
-                        {isDateFilterActive && dateRange?.from && (
+                        {isDateFilterActive && startDate && (
                             <div className="bg-muted p-2 rounded-md text-sm text-center">
-                                {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
-                                {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
+                                {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
+                                {endDate
+                                    ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
+                                    : ` - ${t('now')}`}
                             </div>
                         )}
                         <div className="grid grid-cols-1 gap-4">
@@ -372,10 +377,12 @@ export function ElectricityBillsDashboard({
                 </TabsContent>
 
                 <TabsContent value="yearly">
-                    {isDateFilterActive && dateRange?.from && (
+                    {isDateFilterActive && startDate && (
                         <div className="bg-muted p-2 rounded-md text-sm text-center mb-4">
-                            {t('showingDataFor')} {format(dateRange.from, 'MMM d, yyyy')}
-                            {dateRange.to ? ` - ${format(dateRange.to, 'MMM d, yyyy')}` : ''}
+                            {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
+                            {endDate
+                                ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
+                                : ` - ${t('now')}`}
                         </div>
                     )}
                     <YearlyPieChart
