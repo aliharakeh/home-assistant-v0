@@ -39,7 +39,6 @@ import {
     CalendarIcon,
     ChevronDown,
     ChevronUp,
-    Filter,
     Lightbulb,
     Plus,
     Trash2,
@@ -161,7 +160,7 @@ export function ElectricityBillsDashboard({
             </div>
 
             <Tabs defaultValue="all" className="w-full">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                <div className="flex flex-col justify-between items-start mb-4 gap-2">
                     <TabsList className="grid grid-cols-4">
                         <TabsTrigger value="all">{t('allBills')}</TabsTrigger>
                         <TabsTrigger value="summary">{t('summary')}</TabsTrigger>
@@ -169,7 +168,7 @@ export function ElectricityBillsDashboard({
                         <TabsTrigger value="yearly">{t('yearly')}</TabsTrigger>
                     </TabsList>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between gap-2">
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="outline" size="sm" className="h-8 gap-1">
@@ -186,6 +185,7 @@ export function ElectricityBillsDashboard({
                                     )}
                                 </Button>
                             </PopoverTrigger>
+
                             <PopoverContent className="w-auto p-0" align="end">
                                 <Calendar
                                     initialFocus
@@ -206,13 +206,6 @@ export function ElectricityBillsDashboard({
                                 </div>
                             </PopoverContent>
                         </Popover>
-
-                        {isDateFilterActive && (
-                            <Badge variant="outline" className="gap-1">
-                                <Filter className="h-3 w-3" />
-                                {t('filtered')}
-                            </Badge>
-                        )}
                     </div>
                 </div>
 
