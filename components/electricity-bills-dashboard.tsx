@@ -6,14 +6,7 @@ import { YearlyPieChart } from '@/components/charts/yearly-pie-chart'
 import { DeleteBillsDialog } from '@/components/delete-bills-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
     Dialog,
     DialogContent,
@@ -134,7 +127,11 @@ export function ElectricityBillsDashboard({
 
     return (
         <div dir={dir}>
-            <div className="flex items-center justify-between mb-4">
+            <div
+                className={`flex items-center justify-between mb-4 ${
+                    dir === 'rtl' ? 'flex-row-reverse' : ''
+                }`}
+            >
                 <h2 className="text-xl font-bold flex items-center gap-2">
                     <Zap className="h-5 w-5" />
                     {t('electricityBills')}
@@ -144,12 +141,18 @@ export function ElectricityBillsDashboard({
                         size="sm"
                         variant="outline"
                         onClick={() => setShowDeleteRangeDialog(true)}
-                        className="gap-1 text-destructive"
+                        className={`gap-1 text-destructive ${
+                            dir === 'rtl' ? 'flex-row-reverse' : ''
+                        }`}
                     >
                         <Trash2 className="h-4 w-4" />
                         <span className="hidden sm:inline">{t('deleteBillsInRange')}</span>
                     </Button>
-                    <Button size="sm" onClick={() => setShowAddBill(true)} className="gap-1">
+                    <Button
+                        size="sm"
+                        onClick={() => setShowAddBill(true)}
+                        className={`gap-1 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}
+                    >
                         <Plus className="h-4 w-4" />
                         {t('addBill')}
                     </Button>
@@ -157,58 +160,72 @@ export function ElectricityBillsDashboard({
             </div>
 
             <Tabs defaultValue="all" className="w-full">
-                <div className="flex flex-col justify-between items-start mb-4 gap-2">
-                    <TabsList className="grid grid-cols-4">
-                        <TabsTrigger value="all">{t('allBills')}</TabsTrigger>
-                        <TabsTrigger value="summary">{t('summary')}</TabsTrigger>
-                        <TabsTrigger value="charts">{t('charts')}</TabsTrigger>
-                        <TabsTrigger value="yearly">{t('yearly')}</TabsTrigger>
-                    </TabsList>
+                <TabsList dir={dir} className={`grid grid-cols-4 ${dir === 'rtl' ? 'rtl' : ''}`}>
+                    <TabsTrigger value="all" className={dir === 'rtl' ? 'text-right' : ''}>
+                        {t('allBills')}
+                    </TabsTrigger>
+                    <TabsTrigger value="summary" className={dir === 'rtl' ? 'text-right' : ''}>
+                        {t('summary')}
+                    </TabsTrigger>
+                    <TabsTrigger value="charts" className={dir === 'rtl' ? 'text-right' : ''}>
+                        {t('charts')}
+                    </TabsTrigger>
+                    <TabsTrigger value="yearly" className={dir === 'rtl' ? 'text-right' : ''}>
+                        {t('yearly')}
+                    </TabsTrigger>
+                </TabsList>
 
-                    <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-end gap-4">
-                            <div className="flex flex-col items-center gap-1">
-                                <Label htmlFor="start-date" className="text-xs text-center w-full">
-                                    {t('startDate')}
-                                </Label>
-                                <Input
-                                    id="start-date"
-                                    type="date"
-                                    value={startDate}
-                                    onChange={e => setStartDate(e.target.value)}
-                                    onBlur={handleDateChange}
-                                    className="h-9 w-40 text-sm"
-                                />
-                            </div>
-                            <div className="flex flex-col items-center gap-1">
-                                <Label htmlFor="end-date" className="text-xs text-center w-full">
-                                    {t('endDate')}
-                                </Label>
-                                <Input
-                                    id="end-date"
-                                    type="date"
-                                    value={endDate}
-                                    onChange={e => setEndDate(e.target.value)}
-                                    onBlur={handleDateChange}
-                                    className="h-9 w-40 text-sm"
-                                    min={startDate}
-                                    max={today}
-                                />
-                            </div>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={clearDateFilter}
-                                className="h-8 self-end"
-                                disabled={!isDateFilterActive}
-                            >
-                                {t('clear')}
-                            </Button>
+                <div
+                    className={`flex items-center justify-between gap-2 mt-3 ${
+                        dir === 'rtl' ? 'flex-row-reverse' : ''
+                    }`}
+                >
+                    <div
+                        className={`flex items-end gap-4 ${
+                            dir === 'rtl' ? 'flex-row-reverse' : ''
+                        }`}
+                    >
+                        <div className="flex flex-col items-center gap-1">
+                            <Label htmlFor="start-date" className="text-xs text-center w-full">
+                                {t('startDate')}
+                            </Label>
+                            <Input
+                                id="start-date"
+                                type="date"
+                                value={startDate}
+                                onChange={e => setStartDate(e.target.value)}
+                                onBlur={handleDateChange}
+                                className="h-9 w-40 text-sm"
+                            />
                         </div>
+                        <div className="flex flex-col items-center gap-1">
+                            <Label htmlFor="end-date" className="text-xs text-center w-full">
+                                {t('endDate')}
+                            </Label>
+                            <Input
+                                id="end-date"
+                                type="date"
+                                value={endDate}
+                                onChange={e => setEndDate(e.target.value)}
+                                onBlur={handleDateChange}
+                                className="h-9 w-40 text-sm"
+                                min={startDate}
+                                max={today}
+                            />
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={clearDateFilter}
+                            className={`h-8 self-end ${dir === 'rtl' ? 'ml-0 mr-auto' : ''}`}
+                            disabled={!isDateFilterActive}
+                        >
+                            {t('clear')}
+                        </Button>
                     </div>
                 </div>
 
-                <TabsContent value="all" className="space-y-4">
+                <TabsContent value="all" className="space-y-4 mt-3">
                     {isDateFilterActive && startDate && (
                         <div className="bg-muted p-2 rounded-md text-sm text-center">
                             {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
@@ -227,7 +244,11 @@ export function ElectricityBillsDashboard({
                         sortedBills.map(bill => (
                             <Card key={bill.id} className="overflow-hidden">
                                 <CardHeader className="p-4 pb-0">
-                                    <div className="flex items-center justify-between">
+                                    <div
+                                        className={`flex items-center justify-between ${
+                                            dir === 'rtl' ? 'flex-row-reverse' : ''
+                                        }`}
+                                    >
                                         <div className="flex items-center gap-2">
                                             <Lightbulb className="h-4 w-4 text-muted-foreground" />
                                             <CardTitle className="text-base">
@@ -238,10 +259,14 @@ export function ElectricityBillsDashboard({
                                             {getSubscriptionTypeLabel(bill.subscriptionType, t)}
                                         </Badge>
                                     </div>
-                                    <CardDescription className="flex items-center gap-1 mt-1">
+                                    <div
+                                        className={`flex items-center gap-1 mt-1 ${
+                                            dir === 'rtl' ? 'flex-row-reverse' : ''
+                                        }`}
+                                    >
                                         <CalendarDays className="h-3 w-3" />
                                         {formatDate(bill.date)}
-                                    </CardDescription>
+                                    </div>
                                 </CardHeader>
                                 <CardContent className="p-4 pt-2">
                                     <div className="text-sm">
@@ -251,12 +276,18 @@ export function ElectricityBillsDashboard({
                                         {getSubscriptionTypeLabel(bill.subscriptionType, t)}
                                     </div>
                                 </CardContent>
-                                <CardFooter className="p-2 flex justify-between border-t bg-muted/50">
+                                <CardFooter
+                                    className={`p-2 flex justify-between border-t bg-muted/50 ${
+                                        dir === 'rtl' ? 'flex-row-reverse' : ''
+                                    }`}
+                                >
                                     <Button
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => toggleBillDetails(bill.id)}
-                                        className="flex-1 justify-between"
+                                        className={`flex-1 justify-between ${
+                                            dir === 'rtl' ? 'flex-row-reverse' : ''
+                                        }`}
                                     >
                                         {expandedBillId === bill.id
                                             ? t('hideDetails')
