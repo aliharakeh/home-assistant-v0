@@ -160,7 +160,12 @@ export function formatDate(dateString: string): string {
     }).format(date)
 }
 
-export function getSubscriptionTypeLabel(type: SubscriptionType): string {
+export function getSubscriptionTypeLabel(type: SubscriptionType, t?: (key: string) => string): string {
+    if (t) {
+        return t(type) // Use translated string if translation function is provided
+    }
+    
+    // Fallback to English if no translation function is provided
     switch (type) {
         case 'main':
             return 'Main'

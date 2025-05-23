@@ -235,7 +235,7 @@ export function ElectricityBillsDashboard({
                                             </CardTitle>
                                         </div>
                                         <Badge variant="outline">
-                                            {getSubscriptionTypeLabel(bill.subscriptionType)}
+                                            {getSubscriptionTypeLabel(bill.subscriptionType, t)}
                                         </Badge>
                                     </div>
                                     <CardDescription className="flex items-center gap-1 mt-1">
@@ -248,7 +248,7 @@ export function ElectricityBillsDashboard({
                                         <span className="text-muted-foreground">
                                             {t('subscriptionType')}:
                                         </span>{' '}
-                                        {getSubscriptionTypeLabel(bill.subscriptionType)}
+                                        {getSubscriptionTypeLabel(bill.subscriptionType, t)}
                                     </div>
                                 </CardContent>
                                 <CardFooter className="p-2 flex justify-between border-t bg-muted/50">
