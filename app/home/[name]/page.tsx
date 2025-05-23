@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
     AlertCircle,
     ArrowLeft,
+    ArrowRight,
     Calendar,
     DollarSign,
     Edit,
@@ -104,7 +105,11 @@ export default function HomeDetailPage() {
             <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
                 <div className="flex items-center justify-between mb-6">
                     <Link href="/" className="flex items-center gap-1 text-sm">
-                        <ArrowLeft className="h-4 w-4" />
+                        {dir === 'rtl' ? (
+                            <ArrowRight className="h-4 w-4" />
+                        ) : (
+                            <ArrowLeft className="h-4 w-4" />
+                        )}
                         {t('back')}
                     </Link>
                     <LanguageSwitcher />
@@ -152,7 +157,11 @@ export default function HomeDetailPage() {
         <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
             <div className="flex items-center justify-between mb-6">
                 <Link href="/" className="flex items-center gap-1 text-sm">
-                    <ArrowLeft className="h-4 w-4" />
+                    {dir === 'rtl' ? (
+                        <ArrowRight className="h-4 w-4" />
+                    ) : (
+                        <ArrowLeft className="h-4 w-4" />
+                    )}
                     {t('back')}
                 </Link>
                 <LanguageSwitcher />
