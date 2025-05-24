@@ -18,8 +18,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     AlertCircle,
-    ArrowLeft,
-    ArrowRight,
     Calendar,
     DollarSign,
     Edit,
@@ -35,8 +33,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { ElectricityBillsDashboard } from '@/components/electricity-bills-dashboard';
-import { LanguageSwitcher } from '@/components/language-switcher';
 import { OfflineBanner } from '@/components/offline-banner';
+import { PageHeader } from '@/components/page-header';
 import { useHomes } from '@/contexts/home-context';
 import { useLanguage } from '@/contexts/language-context';
 import { formatRent, formatShareholderAmount, type ElectricityBill } from '@/lib/data';
@@ -96,17 +94,7 @@ export default function HomeDetailPage() {
     if (loading) {
         return (
             <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
-                <div className="flex items-center justify-between mb-6">
-                    <Link href="/" className="flex items-center gap-1 text-sm">
-                        {dir === 'rtl' ? (
-                            <ArrowRight className="h-4 w-4" />
-                        ) : (
-                            <ArrowLeft className="h-4 w-4" />
-                        )}
-                        {t('back')}
-                    </Link>
-                    <LanguageSwitcher />
-                </div>
+                <PageHeader showBackButton={true} backHref="/" />
                 <Skeleton className="h-[500px] w-full rounded-lg" />
             </div>
         );
@@ -115,9 +103,7 @@ export default function HomeDetailPage() {
     if (error) {
         return (
             <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
-                <div className="flex justify-end mb-4">
-                    <LanguageSwitcher />
-                </div>
+                <PageHeader />
                 <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>{error}</AlertDescription>
@@ -132,9 +118,7 @@ export default function HomeDetailPage() {
     if (!homeData) {
         return (
             <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
-                <div className="flex justify-end mb-4">
-                    <LanguageSwitcher />
-                </div>
+                <PageHeader />
                 <Alert>
                     <AlertDescription>{t('propertyNotFound')}</AlertDescription>
                 </Alert>
@@ -148,17 +132,7 @@ export default function HomeDetailPage() {
 
     return (
         <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
-            <div className="flex items-center justify-between mb-6">
-                <Link href="/" className="flex items-center gap-1 text-sm">
-                    {dir === 'rtl' ? (
-                        <ArrowRight className="h-4 w-4" />
-                    ) : (
-                        <ArrowLeft className="h-4 w-4" />
-                    )}
-                    {t('back')}
-                </Link>
-                <LanguageSwitcher />
-            </div>
+            <PageHeader showBackButton={true} backHref="/" />
 
             <Tabs defaultValue="details" className="w-full" dir={dir}>
                 <TabsList className="grid w-full grid-cols-2 mb-6">

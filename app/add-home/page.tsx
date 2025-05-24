@@ -1,7 +1,7 @@
 'use client';
 
-import { LanguageSwitcher } from '@/components/language-switcher';
 import { OfflineBanner } from '@/components/offline-banner';
+import { PageHeader } from '@/components/page-header';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +13,7 @@ import { Toggle } from '@/components/ui/toggle';
 import { useHomes } from '@/contexts/home-context';
 import { useLanguage } from '@/contexts/language-context';
 import type { RentDuration, Shareholder } from '@/lib/data';
-import { AlertCircle, ArrowLeft, Calendar, DollarSign, Percent, Plus, X } from 'lucide-react';
+import { AlertCircle, Calendar, DollarSign, Percent, Plus, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type React from 'react';
@@ -172,13 +172,7 @@ export default function AddHomePage() {
     if (loading) {
         return (
             <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
-                <div className="flex items-center justify-between mb-6">
-                    <Link href="/" className="flex items-center gap-1 text-sm">
-                        <ArrowLeft className="h-4 w-4" />
-                        {t('back')}
-                    </Link>
-                    <LanguageSwitcher />
-                </div>
+                <PageHeader showBackButton={true} backHref="/" />
                 <Skeleton className="h-[600px] w-full rounded-lg" />
             </div>
         );
@@ -187,9 +181,7 @@ export default function AddHomePage() {
     if (error) {
         return (
             <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
-                <div className="flex justify-end mb-4">
-                    <LanguageSwitcher />
-                </div>
+                <PageHeader />
                 <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>{error}</AlertDescription>
@@ -203,13 +195,11 @@ export default function AddHomePage() {
 
     return (
         <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
-            <div className="flex items-center justify-between mb-6">
-                <Link href="/" className="flex items-center gap-1 text-sm">
-                    <ArrowLeft className="h-4 w-4" />
-                    {t('back')}
-                </Link>
-                <LanguageSwitcher />
-            </div>
+            <PageHeader
+                title={isEdit ? t('editProperty') : t('addNewProperty')}
+                showBackButton={true}
+                backHref="/"
+            />
 
             <Card>
                 <CardHeader>
