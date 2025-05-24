@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { useLanguage } from '@/contexts/language-context'
-import type { Home } from '@/lib/data'
-import { formatRent, formatShareholderAmount } from '@/lib/data'
-import { ChevronRight, HomeIcon, User, Users, Zap } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/language-context';
+import type { Home } from '@/lib/data';
+import { formatRent, formatShareholderAmount } from '@/lib/data';
+import { ChevronLeft, ChevronRight, HomeIcon, User, Users, Zap } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 interface HomeCardProps extends Home {}
 
@@ -21,8 +21,8 @@ export function HomeCard({
     electricityCode,
     shareholders,
 }: HomeCardProps) {
-    const [expanded, setExpanded] = useState(false)
-    const { t, dir } = useLanguage()
+    const [expanded, setExpanded] = useState(false);
+    const { t, dir } = useLanguage();
 
     return (
         <Card className="overflow-hidden" dir={dir}>
@@ -87,10 +87,14 @@ export function HomeCard({
                 <Link href={`/home/${encodeURIComponent(name)}`}>
                     <Button variant="ghost" size="sm" className="gap-1">
                         {t('details')}
-                        <ChevronRight className="h-4 w-4" />
+                        {dir === 'rtl' ? (
+                            <ChevronLeft className="h-4 w-4" />
+                        ) : (
+                            <ChevronRight className="h-4 w-4" />
+                        )}
                     </Button>
                 </Link>
             </CardFooter>
         </Card>
-    )
+    );
 }

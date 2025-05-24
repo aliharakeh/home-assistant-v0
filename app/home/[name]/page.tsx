@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Dialog,
     DialogContent,
@@ -12,10 +12,10 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog'
-import { Separator } from '@/components/ui/separator'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     AlertCircle,
     ArrowLeft,
@@ -29,76 +29,69 @@ import {
     User,
     Users,
     Zap,
-} from 'lucide-react'
-import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+} from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { ElectricityBillsDashboard } from '@/components/electricity-bills-dashboard'
-import { LanguageSwitcher } from '@/components/language-switcher'
-import { OfflineBanner } from '@/components/offline-banner'
-import { useHomes } from '@/contexts/home-context'
-import { useLanguage } from '@/contexts/language-context'
-import { formatRent, formatShareholderAmount, type ElectricityBill } from '@/lib/data'
+import { ElectricityBillsDashboard } from '@/components/electricity-bills-dashboard';
+import { LanguageSwitcher } from '@/components/language-switcher';
+import { OfflineBanner } from '@/components/offline-banner';
+import { useHomes } from '@/contexts/home-context';
+import { useLanguage } from '@/contexts/language-context';
+import { formatRent, formatShareholderAmount, type ElectricityBill } from '@/lib/data';
 
 export default function HomeDetailPage() {
-    const params = useParams()
-    const router = useRouter()
-    const homeName = decodeURIComponent(params.name as string)
-    const { t, dir } = useLanguage()
-    const {
-        getHomeByName,
-        updateHome,
-        deleteHome,
-        addBillToHome,
-        deleteBillFromHome,
-        loading,
-        error,
-    } = useHomes()
+    const params = useParams();
+    const router = useRouter();
+    const homeName = decodeURIComponent(params.name as string);
+    const { t, dir } = useLanguage();
+    const { getHomeByName, deleteHome, addBillToHome, deleteBillFromHome, loading, error } =
+        useHomes();
 
-    const [homeData, setHomeData] = useState<ReturnType<typeof getHomeByName>>(undefined)
-    const [isDeleting, setIsDeleting] = useState(false)
+    const [homeData, setHomeData] = useState<ReturnType<typeof getHomeByName>>(undefined);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         if (!loading) {
-            setHomeData(getHomeByName(homeName))
+            setHomeData(getHomeByName(homeName));
         }
-    }, [loading, homeName, getHomeByName])
+    }, [loading, homeName, getHomeByName]);
 
     const handleAddBill = async (bill: Omit<ElectricityBill, 'id'>) => {
-        if (!homeData) return
+        if (!homeData) return;
 
         try {
-            await addBillToHome(homeData.name, bill)
+            await addBillToHome(homeData.name, bill);
             // The home context will update the state, so we don't need to do it here
         } catch (err) {
-            console.error('Failed to add bill:', err)
+            console.error('Failed to add bill:', err);
         }
-    }
+    };
 
     const handleDeleteHome = async () => {
-        if (!homeData) return
+        if (!homeData) return;
 
         try {
-            setIsDeleting(true)
-            await deleteHome(homeData.name)
-            router.push('/')
+            setIsDeleting(true);
+            await deleteHome(homeData.name);
+            router.push('/');
         } catch (err) {
-            console.error('Failed to delete home:', err)
-            setIsDeleting(false)
+            console.error('Failed to delete home:', err);
+            setIsDeleting(false);
         }
-    }
+    };
 
     const handleDeleteBill = async (billId: string) => {
-        if (!homeData) return
+        if (!homeData) return;
 
         try {
-            await deleteBillFromHome(homeData.name, billId)
+            await deleteBillFromHome(homeData.name, billId);
             // The home context will update the state, so we don't need to do it here
         } catch (err) {
-            console.error('Failed to delete bill:', err)
+            console.error('Failed to delete bill:', err);
         }
-    }
+    };
 
     if (loading) {
         return (
@@ -116,7 +109,7 @@ export default function HomeDetailPage() {
                 </div>
                 <Skeleton className="h-[500px] w-full rounded-lg" />
             </div>
-        )
+        );
     }
 
     if (error) {
@@ -133,7 +126,7 @@ export default function HomeDetailPage() {
                     <Link href="/">{t('goBack')}</Link>
                 </Button>
             </div>
-        )
+        );
     }
 
     if (!homeData) {
@@ -150,7 +143,7 @@ export default function HomeDetailPage() {
                 </Button>
                 <OfflineBanner />
             </div>
-        )
+        );
     }
 
     return (
@@ -167,7 +160,7 @@ export default function HomeDetailPage() {
                 <LanguageSwitcher />
             </div>
 
-            <Tabs defaultValue="details" className="w-full">
+            <Tabs defaultValue="details" className="w-full" dir={dir}>
                 <TabsList className="grid w-full grid-cols-2 mb-6">
                     <TabsTrigger value="details">{t('details')}</TabsTrigger>
                     <TabsTrigger value="bills">{t('bills')}</TabsTrigger>
@@ -338,5 +331,5 @@ export default function HomeDetailPage() {
 
             <OfflineBanner />
         </div>
-    )
+    );
 }

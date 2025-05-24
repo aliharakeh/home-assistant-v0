@@ -1,32 +1,32 @@
-'use client'
+'use client';
 
-import { LanguageSwitcher } from '@/components/language-switcher'
-import { OfflineBanner } from '@/components/offline-banner'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Toggle } from '@/components/ui/toggle'
-import { useHomes } from '@/contexts/home-context'
-import { useLanguage } from '@/contexts/language-context'
-import type { RentDuration, Shareholder } from '@/lib/data'
-import { AlertCircle, ArrowLeft, Calendar, DollarSign, Percent, Plus, X } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import type React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { LanguageSwitcher } from '@/components/language-switcher';
+import { OfflineBanner } from '@/components/offline-banner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Toggle } from '@/components/ui/toggle';
+import { useHomes } from '@/contexts/home-context';
+import { useLanguage } from '@/contexts/language-context';
+import type { RentDuration, Shareholder } from '@/lib/data';
+import { AlertCircle, ArrowLeft, Calendar, DollarSign, Percent, Plus, X } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function AddHomePage() {
-    const router = useRouter()
-    const searchParams = useSearchParams()
-    const { t, dir } = useLanguage()
-    const { getHomeByName, addHome, updateHome, loading, error } = useHomes()
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const { t, dir } = useLanguage();
+    const { getHomeByName, addHome, updateHome, loading, error } = useHomes();
 
-    const isEdit = searchParams.get('edit') === 'true'
-    const homeName = searchParams.get('name')
+    const isEdit = searchParams.get('edit') === 'true';
+    const homeName = searchParams.get('name');
 
     const [formData, setFormData] = useState({
         name: '',
@@ -34,25 +34,25 @@ export default function AddHomePage() {
         electricityCode: '',
         tenant: '',
         rent: '',
-    })
+    });
 
-    const [rentDuration, setRentDuration] = useState<RentDuration>('monthly')
-    const [shareholders, setShareholders] = useState<Shareholder[]>([])
-    const [newShareholder, setNewShareholder] = useState('')
-    const [newShareholderAmount, setNewShareholderAmount] = useState('')
-    const [isPercentage, setIsPercentage] = useState(true)
-    const [isSaving, setIsSaving] = useState(false)
-    const [saveError, setSaveError] = useState<string | null>(null)
+    const [rentDuration, setRentDuration] = useState<RentDuration>('monthly');
+    const [shareholders, setShareholders] = useState<Shareholder[]>([]);
+    const [newShareholder, setNewShareholder] = useState('');
+    const [newShareholderAmount, setNewShareholderAmount] = useState('');
+    const [isPercentage, setIsPercentage] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
 
-    const initializedRef = useRef(false)
+    const initializedRef = useRef(false);
 
     // Load data from database if in edit mode
     useEffect(() => {
         // Only run once on initial load when in edit mode and not loading
         if (isEdit && homeName && !initializedRef.current && !loading) {
-            initializedRef.current = true
+            initializedRef.current = true;
 
-            const home = getHomeByName(decodeURIComponent(homeName))
+            const home = getHomeByName(decodeURIComponent(homeName));
 
             if (home) {
                 setFormData({
@@ -61,22 +61,22 @@ export default function AddHomePage() {
                     electricityCode: home.electricityCode,
                     tenant: home.tenant,
                     rent: home.rent.toString(),
-                })
+                });
 
-                setRentDuration(home.rentDuration)
-                setShareholders([...home.shareholders])
+                setRentDuration(home.rentDuration);
+                setShareholders([...home.shareholders]);
             }
         }
-    }, [isEdit, homeName, getHomeByName, loading])
+    }, [isEdit, homeName, getHomeByName, loading]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target
-        setFormData(prev => ({ ...prev, [id]: value }))
-    }
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
+    };
 
     const addShareholder = () => {
         if (newShareholder.trim() && newShareholderAmount.trim()) {
-            const amount = Number.parseFloat(newShareholderAmount)
+            const amount = Number.parseFloat(newShareholderAmount);
             if (!isNaN(amount) && amount > 0) {
                 setShareholders([
                     ...shareholders,
@@ -85,16 +85,16 @@ export default function AddHomePage() {
                         amount,
                         isPercentage,
                     },
-                ])
-                setNewShareholder('')
-                setNewShareholderAmount('')
+                ]);
+                setNewShareholder('');
+                setNewShareholderAmount('');
             }
         }
-    }
+    };
 
     const removeShareholder = (index: number) => {
-        setShareholders(shareholders.filter((_, i) => i !== index))
-    }
+        setShareholders(shareholders.filter((_, i) => i !== index));
+    };
 
     const toggleShareholderType = (index: number) => {
         setShareholders(
@@ -103,15 +103,15 @@ export default function AddHomePage() {
                     return {
                         ...shareholder,
                         isPercentage: !shareholder.isPercentage,
-                    }
+                    };
                 }
-                return shareholder
+                return shareholder;
             })
-        )
-    }
+        );
+    };
 
     const updateShareholderAmount = (index: number, amount: string) => {
-        const parsedAmount = Number.parseFloat(amount)
+        const parsedAmount = Number.parseFloat(amount);
         if (!isNaN(parsedAmount)) {
             setShareholders(
                 shareholders.map((shareholder, i) => {
@@ -119,25 +119,25 @@ export default function AddHomePage() {
                         return {
                             ...shareholder,
                             amount: parsedAmount,
-                        }
+                        };
                     }
-                    return shareholder
+                    return shareholder;
                 })
-            )
+            );
         }
-    }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setSaveError(null)
-        setIsSaving(true)
+        e.preventDefault();
+        setSaveError(null);
+        setIsSaving(true);
 
         try {
-            const rentValue = Number.parseFloat(formData.rent)
+            const rentValue = Number.parseFloat(formData.rent);
             if (isNaN(rentValue)) {
-                setSaveError(t('invalidRentAmount'))
-                setIsSaving(false)
-                return
+                setSaveError(t('invalidRentAmount'));
+                setIsSaving(false);
+                return;
             }
 
             const homeData = {
@@ -152,22 +152,22 @@ export default function AddHomePage() {
                     isEdit && homeName
                         ? getHomeByName(decodeURIComponent(homeName))?.electricityBills || []
                         : [],
-            }
+            };
 
             if (isEdit && homeName) {
-                await updateHome(homeData)
+                await updateHome(homeData);
             } else {
-                await addHome(homeData)
+                await addHome(homeData);
             }
 
-            router.push('/')
+            router.push('/');
         } catch (err) {
-            console.error('Failed to save home:', err)
-            setSaveError(t('failedToSaveHome'))
+            console.error('Failed to save home:', err);
+            setSaveError(t('failedToSaveHome'));
         } finally {
-            setIsSaving(false)
+            setIsSaving(false);
         }
-    }
+    };
 
     if (loading) {
         return (
@@ -181,7 +181,7 @@ export default function AddHomePage() {
                 </div>
                 <Skeleton className="h-[600px] w-full rounded-lg" />
             </div>
-        )
+        );
     }
 
     if (error) {
@@ -198,7 +198,7 @@ export default function AddHomePage() {
                     <Link href="/">{t('goBack')}</Link>
                 </Button>
             </div>
-        )
+        );
     }
 
     return (
@@ -284,6 +284,7 @@ export default function AddHomePage() {
                                 <div className="flex items-center gap-2 border rounded-md p-2">
                                     <Calendar className="h-4 w-4 text-muted-foreground" />
                                     <RadioGroup
+                                        dir={dir}
                                         value={rentDuration}
                                         onValueChange={value =>
                                             setRentDuration(value as RentDuration)
@@ -334,8 +335,8 @@ export default function AddHomePage() {
                                             className="flex-1"
                                             onKeyDown={e => {
                                                 if (e.key === 'Enter') {
-                                                    e.preventDefault()
-                                                    addShareholder()
+                                                    e.preventDefault();
+                                                    addShareholder();
                                                 }
                                             }}
                                         />
@@ -427,5 +428,5 @@ export default function AddHomePage() {
 
             <OfflineBanner />
         </div>
-    )
+    );
 }
