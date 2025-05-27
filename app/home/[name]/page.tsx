@@ -227,19 +227,20 @@ export default function HomeDetailPage() {
                                                 {homeData.shareholders.map((shareholder, index) => (
                                                     <div
                                                         key={index}
-                                                        className="flex items-center justify-between bg-muted p-2 rounded-md"
+                                                        className="flex items-center gap-x-3 bg-gradient-to-r from-muted/50 to-muted/80 p-3 rounded-lg border border-border/50 hover:border-border transition-colors"
                                                     >
-                                                        <div>
-                                                            <p className="text-sm font-medium">
-                                                                {shareholder.name}
-                                                            </p>
-                                                            <p className="text-xs text-muted-foreground">
-                                                                {t('coOwner')} •{' '}
-                                                                {formatShareholderAmount(
-                                                                    shareholder
-                                                                )}
-                                                            </p>
+                                                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                                            <User className="h-4 w-4 text-primary" />
                                                         </div>
+                                                        <p className="grow text-sm font-semibold text-foreground">
+                                                            {shareholder.name}
+                                                        </p>
+                                                        <Badge
+                                                            variant="secondary"
+                                                            className="text-xs bg-primary/10 text-primary border-primary/20"
+                                                        >
+                                                            {formatShareholderAmount(shareholder)}
+                                                        </Badge>
                                                     </div>
                                                 ))}
                                             </div>

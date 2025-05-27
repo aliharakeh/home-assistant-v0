@@ -26,7 +26,6 @@ import {
     formatDate,
     getSubscriptionTypeLabel,
 } from '@/lib/data'
-import { format } from 'date-fns'
 import { CalendarDays, ChevronDown, ChevronUp, Lightbulb, Plus, Trash2, Zap } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
@@ -202,14 +201,6 @@ export function ElectricityBillsDashboard({
                 </div>
 
                 <TabsContent value="all" className="space-y-4 mt-3">
-                    {isDateFilterActive && startDate && (
-                        <div dir={dir} className="bg-muted p-2 rounded-md text-sm text-center">
-                            {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
-                            {endDate
-                                ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
-                                : ` - ${t('now')}`}
-                        </div>
-                    )}
                     {sortedBills.length === 0 ? (
                         <Card>
                             <CardContent className="pt-6 text-center text-muted-foreground">
@@ -293,14 +284,6 @@ export function ElectricityBillsDashboard({
                 </TabsContent>
 
                 <TabsContent value="summary">
-                    {isDateFilterActive && startDate && (
-                        <div className="bg-muted p-2 rounded-md text-sm text-center mb-4">
-                            {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
-                            {endDate
-                                ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
-                                : ` - ${t('now')}`}
-                        </div>
-                    )}
                     <div className="grid grid-cols-1 gap-4">
                         <Card>
                             <CardHeader className="pb-2">
@@ -350,14 +333,6 @@ export function ElectricityBillsDashboard({
 
                 <TabsContent value="charts">
                     <div className="space-y-6">
-                        {isDateFilterActive && startDate && (
-                            <div className="bg-muted p-2 rounded-md text-sm text-center">
-                                {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
-                                {endDate
-                                    ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
-                                    : ` - ${t('now')}`}
-                            </div>
-                        )}
                         <div className="grid grid-cols-1 gap-4">
                             <MonthlyLineChart
                                 bills={filteredBills}
@@ -376,14 +351,6 @@ export function ElectricityBillsDashboard({
                 </TabsContent>
 
                 <TabsContent value="yearly">
-                    {isDateFilterActive && startDate && (
-                        <div className="bg-muted p-2 rounded-md text-sm text-center mb-4">
-                            {t('showingDataFor')} {format(new Date(startDate), 'MMM d, yyyy')}
-                            {endDate
-                                ? ` - ${format(new Date(endDate), 'MMM d, yyyy')}`
-                                : ` - ${t('now')}`}
-                        </div>
-                    )}
                     <YearlyPieChart
                         bills={filteredBills}
                         title={t('yearlyDistribution')}
