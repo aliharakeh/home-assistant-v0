@@ -38,8 +38,6 @@ export const translations = {
         yearly: 'Yearly',
         shareholders: 'Shareholders/Owners',
         coOwner: 'Co-owner',
-        peopleShareOwnership:
-            '{count} {count, plural, one {person} other {people}} share ownership of this property',
         deleteProperty: 'Delete Property',
         areYouSure: 'Are you sure?',
         deleteConfirmation:
@@ -177,8 +175,6 @@ export const translations = {
         yearly: 'سنوي',
         shareholders: 'المساهمون/المالكون',
         coOwner: 'مالك مشارك',
-        peopleShareOwnership:
-            '{count} {count, plural, one {شخص يشارك} other {أشخاص يشاركون}} في ملكية هذا العقار',
         deleteProperty: 'حذف العقار',
         areYouSure: 'هل أنت متأكد؟',
         deleteConfirmation:

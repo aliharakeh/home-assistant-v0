@@ -26,14 +26,27 @@ export function PWAInstallPrompt() {
     useEffect(() => {
         const handler = (e: Event) => {
             e.preventDefault()
-            setInstallPrompt(e as BeforeInstallPromptEvent)
-            setShowPrompt(true)
+            const now = new Date().getTime()
+            const lastPromptTime = localStorage.getItem('lastPwaInstallPromptTime')
+            const oneHour = 60 * 60 * 1000
+
+            if (!lastPromptTime || now - parseInt(lastPromptTime, 10) > oneHour) {
+                setInstallPrompt(e as BeforeInstallPromptEvent)
+                setShowPrompt(true)
+                localStorage.setItem('lastPwaInstallPromptTime', now.toString())
+            }
         }
 
-        window.addEventListener('beforeinstallprompt', handler)
+        // Check if running in standalone mode (app installed)
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+        if (!isStandalone) {
+            window.addEventListener('beforeinstallprompt', handler)
+        }
 
         return () => {
-            window.removeEventListener('beforeinstallprompt', handler)
+            if (!isStandalone) {
+                window.removeEventListener('beforeinstallprompt', handler)
+            }
         }
     }, [])
 
