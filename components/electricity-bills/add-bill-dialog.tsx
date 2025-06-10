@@ -19,8 +19,11 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Toggle } from '@/components/ui/toggle';
 import { useLanguage } from '@/contexts/language-context';
 import type { ElectricityBill, SubscriptionType } from '@/lib/data';
+import { CurrencyType, toggleCurrency } from '@/lib/data';
+import { DollarSign, Percent } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
 
@@ -36,6 +39,7 @@ export function AddBillDialog({ open, onOpenChange, onAddBill }: AddBillDialogPr
         amount: '',
         date: new Date().toISOString().split('T')[0],
         subscriptionType: 'main' as SubscriptionType,
+        currency: CurrencyType.USD as CurrencyType,
         notes: '',
     });
 
@@ -58,6 +62,7 @@ export function AddBillDialog({ open, onOpenChange, onAddBill }: AddBillDialogPr
             amount,
             date: formData.date,
             subscriptionType: formData.subscriptionType,
+            currency: formData.currency,
             notes: formData.notes || undefined,
         });
 
@@ -66,6 +71,7 @@ export function AddBillDialog({ open, onOpenChange, onAddBill }: AddBillDialogPr
             amount: '',
             date: new Date().toISOString().split('T')[0],
             subscriptionType: 'main',
+            currency: CurrencyType.USD,
             notes: '',
         });
 
@@ -84,17 +90,39 @@ export function AddBillDialog({ open, onOpenChange, onAddBill }: AddBillDialogPr
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
                             <Label htmlFor="amount">{t('amount')}</Label>
-                            <Input
-                                id="amount"
-                                name="amount"
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                placeholder="0.00"
-                                value={formData.amount}
-                                onChange={handleChange}
-                                required
-                            />
+                            <div className="flex gap-2">
+                                <Input
+                                    id="amount"
+                                    name="amount"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="0.00"
+                                    value={formData.amount}
+                                    onChange={handleChange}
+                                    required
+                                    className="flex-1"
+                                />
+                                <Toggle
+                                    pressed={formData.currency === CurrencyType.PERCENTAGE}
+                                    onPressedChange={() =>
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            currency: toggleCurrency(prev.currency),
+                                        }))
+                                    }
+                                    size="sm"
+                                    aria-label="Toggle currency"
+                                >
+                                    {formData.currency === CurrencyType.PERCENTAGE ? (
+                                        <Percent className="h-4 w-4" />
+                                    ) : formData.currency === CurrencyType.USD ? (
+                                        <DollarSign className="h-4 w-4" />
+                                    ) : (
+                                        <span className="text-xs">{CurrencyType.LBP}</span>
+                                    )}
+                                </Toggle>
+                            </div>
                         </div>
 
                         <div className="grid gap-2">

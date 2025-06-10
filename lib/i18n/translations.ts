@@ -137,6 +137,8 @@ export const translations = {
         billsDeleted: 'Bills Deleted Successfully',
         billsDeletedDescription:
             '{count} {count, plural, one {bill was} other {bills were}} successfully deleted.',
+        breakdown: 'Breakdown',
+        totalSpent: 'Total Spent',
     },
     ar: {
         // Common
@@ -272,6 +274,8 @@ export const translations = {
         billsDeleted: 'تم حذف الفواتير بنجاح',
         billsDeletedDescription:
             'تم حذف {count} {count, plural, one {فاتورة} other {فواتير}} بنجاح.',
+        breakdown: 'التفصيل',
+        totalSpent: 'إجمالي الفواتير',
     },
 };
 

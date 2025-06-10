@@ -106,11 +106,9 @@ export async function seedInitialData(initialHomes: Home[]): Promise<void> {
     // Only seed if the database is empty
     if (existingHomes.length === 0) {
         const tx = db.transaction('homes', 'readwrite');
-
         for (const home of initialHomes) {
             await tx.store.add(home);
         }
-
         await tx.done;
     }
 }

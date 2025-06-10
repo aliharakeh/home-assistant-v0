@@ -13,6 +13,7 @@ export interface ElectricityBill {
     id: string;
     subscriptionType: SubscriptionType;
     amount: number;
+    currency: CurrencyType;
     date: string; // ISO date string
     notes?: string;
 }
@@ -51,6 +52,7 @@ function generateMonthlyBills(homeName: string, startId: number): ElectricityBil
             id: `bill-${startId + i * 2}`,
             subscriptionType: 'main',
             amount: mainAmount,
+            currency: CurrencyType.USD,
             date: date,
             notes: i === 3 ? 'Checked for issues, all normal.' : undefined, // Example note
         });
@@ -60,6 +62,7 @@ function generateMonthlyBills(homeName: string, startId: number): ElectricityBil
                 id: `bill-${startId + i * 2 + 1}`,
                 subscriptionType: 'motor',
                 amount: motorAmount,
+                currency: CurrencyType.USD,
                 date: date,
             });
         }
@@ -76,6 +79,7 @@ function generateMonthlyBills(homeName: string, startId: number): ElectricityBil
             id: `bill-${billIdCounter++}`,
             subscriptionType: 'main',
             amount: mainAmount,
+            currency: CurrencyType.USD,
             date: date,
         });
     }

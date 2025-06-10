@@ -22,11 +22,23 @@ import { useToast } from '@/components/ui/use-toast';
 import { useLanguage } from '@/contexts/language-context';
 import {
     calculateTotalBills,
+    CurrencyType,
     type ElectricityBill,
     formatDate,
+    formatPayment,
     getSubscriptionTypeLabel,
 } from '@/lib/data';
-import { CalendarDays, ChevronDown, ChevronUp, Lightbulb, Plus, Trash2, Zap } from 'lucide-react';
+import {
+    CalendarDays,
+    ChevronDown,
+    ChevronUp,
+    DollarSign,
+    Lightbulb,
+    Percent,
+    Plus,
+    Trash2,
+    Zap,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 interface ElectricityBillsDashboardProps {
@@ -261,7 +273,7 @@ function AllBillsTab({
                             <div className="flex items-center gap-2">
                                 <Lightbulb className="h-4 w-4 text-muted-foreground" />
                                 <CardTitle className="text-base">
-                                    ${bill.amount.toFixed(2)}
+                                    {formatPayment(bill.amount, bill.currency)}
                                 </CardTitle>
                             </div>
                             <Badge variant="outline">
@@ -278,6 +290,12 @@ function AllBillsTab({
                             <span className="text-muted-foreground">{t('subscriptionType')}:</span>{' '}
                             {getSubscriptionTypeLabel(bill.subscriptionType, t)}
                         </div>
+                        {bill.notes && (
+                            <div dir={dir} className="text-sm mt-1">
+                                <span className="text-muted-foreground">{t('notes')}:</span>{' '}
+                                {bill.notes}
+                            </div>
+                        )}
                     </CardContent>
                     <CardFooter
                         className={`p-2 flex justify-between border-t bg-muted/50 ${
@@ -337,41 +355,132 @@ interface SummaryTabProps {
 }
 
 function SummaryTab({ bills, totals, t }: SummaryTabProps) {
+    // Calculate totals by subscription type and currency
+    const totalsBySubscription = bills.reduce((acc, bill) => {
+        if (!acc[bill.subscriptionType]) {
+            acc[bill.subscriptionType] = {
+                [CurrencyType.USD]: 0,
+                [CurrencyType.LBP]: 0,
+                [CurrencyType.PERCENTAGE]: 0,
+            };
+        }
+        acc[bill.subscriptionType][bill.currency] += bill.amount;
+        return acc;
+    }, {} as Record<string, Record<CurrencyType, number>>);
+
+    // Calculate combined totals for all currencies
+    const combinedTotals = Object.values(totalsBySubscription).reduce((acc, subscriptionTotals) => {
+        Object.entries(subscriptionTotals).forEach(([currency, amount]) => {
+            const currencyType = currency as CurrencyType;
+            if (!acc[currencyType]) {
+                acc[currencyType] = 0;
+            }
+            acc[currencyType] += amount;
+        });
+        return acc;
+    }, {} as Record<CurrencyType, number>);
+
     return (
-        <div className="grid grid-cols-1 gap-4">
-            <Card>
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-base">{t('totalBills')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">${totals.total.toFixed(2)}</div>
-                    <p className="text-xs text-muted-foreground">
-                        {bills.length} {t('bills')}
-                    </p>
-                </CardContent>
-            </Card>
+        <div className="space-y-4 mt-3">
+            {Object.entries(totalsBySubscription).map(([subscriptionType, currencyTotals]) => (
+                <Card key={subscriptionType}>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Zap className="h-4 w-4" />
+                            {t(subscriptionType)}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {Object.entries(currencyTotals).map(
+                                ([currency, amount]) =>
+                                    amount > 0 && (
+                                        <div
+                                            key={currency}
+                                            className="flex items-center justify-between"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                {currency === CurrencyType.USD ? (
+                                                    <DollarSign className="h-4 w-4" />
+                                                ) : currency === CurrencyType.PERCENTAGE ? (
+                                                    <Percent className="h-4 w-4" />
+                                                ) : (
+                                                    <span className="text-sm">
+                                                        {CurrencyType.LBP}
+                                                    </span>
+                                                )}
+                                                <span className="text-sm text-muted-foreground">
+                                                    {t('currency')}
+                                                </span>
+                                            </div>
+                                            <div className="text-lg font-semibold">
+                                                {formatPayment(amount, currency as CurrencyType)}
+                                            </div>
+                                        </div>
+                                    )
+                            )}
+                            <div className="pt-2 border-t">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-muted-foreground">
+                                        {t('totalBills')}
+                                    </span>
+                                    <span className="text-sm">
+                                        {
+                                            bills.filter(
+                                                b => b.subscriptionType === subscriptionType
+                                            ).length
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
 
-            <Card>
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-base">{t('mainBills')}</CardTitle>
+            <Card className="bg-muted/50">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Zap className="h-4 w-4" />
+                        {t('total')}
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">${totals.main.toFixed(2)}</div>
-                    <p className="text-xs text-muted-foreground">
-                        {bills.filter(b => b.subscriptionType === 'main').length} {t('bills')}
-                    </p>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-base">{t('motorBills')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">${totals.motor.toFixed(2)}</div>
-                    <p className="text-xs text-muted-foreground">
-                        {bills.filter(b => b.subscriptionType === 'motor').length} {t('bills')}
-                    </p>
+                    <div className="space-y-4">
+                        {Object.entries(combinedTotals).map(
+                            ([currency, amount]) =>
+                                amount > 0 && (
+                                    <div
+                                        key={currency}
+                                        className="flex items-center justify-between"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            {currency === CurrencyType.USD ? (
+                                                <DollarSign className="h-4 w-4" />
+                                            ) : currency === CurrencyType.PERCENTAGE ? (
+                                                <Percent className="h-4 w-4" />
+                                            ) : (
+                                                <span className="text-sm">{CurrencyType.LBP}</span>
+                                            )}
+                                            <span className="text-sm text-muted-foreground">
+                                                {t('currency')}
+                                            </span>
+                                        </div>
+                                        <div className="text-lg font-semibold">
+                                            {formatPayment(amount, currency as CurrencyType)}
+                                        </div>
+                                    </div>
+                                )
+                        )}
+                        <div className="pt-2 border-t">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">
+                                    {t('totalBills')}
+                                </span>
+                                <span className="text-sm">{bills.length}</span>
+                            </div>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
         </div>
@@ -384,6 +493,16 @@ interface ChartsTabProps {
 }
 
 function ChartsTab({ bills, t }: ChartsTabProps) {
+    // Get the most common currency from bills
+    const mostCommonCurrency = bills.reduce((acc, bill) => {
+        acc[bill.currency] = (acc[bill.currency] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    const dominantCurrency = Object.entries(mostCommonCurrency).reduce((a, b) =>
+        a[1] > b[1] ? a : b
+    )[0] as CurrencyType;
+
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 gap-4">
@@ -392,12 +511,14 @@ function ChartsTab({ bills, t }: ChartsTabProps) {
                     subscriptionType="main"
                     title={t('mainBillsTrend')}
                     className="md:col-span-1"
+                    currency={dominantCurrency}
                 />
                 <MonthlyLineChart
                     bills={bills}
                     subscriptionType="motor"
                     title={t('motorBillsTrend')}
                     className="md:col-span-1"
+                    currency={dominantCurrency}
                 />
             </div>
         </div>
@@ -410,11 +531,22 @@ interface YearlyTabProps {
 }
 
 function YearlyTab({ bills, t }: YearlyTabProps) {
+    // Get the most common currency from bills
+    const mostCommonCurrency = bills.reduce((acc, bill) => {
+        acc[bill.currency] = (acc[bill.currency] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    const dominantCurrency = Object.entries(mostCommonCurrency).reduce((a, b) =>
+        a[1] > b[1] ? a : b
+    )[0] as CurrencyType;
+
     return (
         <YearlyPieChart
             bills={bills}
             title={t('yearlyDistribution')}
             description={t('yearlyDistributionDescription')}
+            currency={dominantCurrency}
         />
     );
 }
