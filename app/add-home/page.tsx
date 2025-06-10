@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
 import { useHomes } from '@/contexts/home-context';
 import { useLanguage } from '@/contexts/language-context';
-import type { RentDuration, Shareholder } from '@/lib/data';
+import { CurrencyType, RentDuration, Shareholder, toggleCurrency } from '@/lib/data';
 import { AlertCircle, Calendar, DollarSign, Percent, Plus, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -23,10 +23,10 @@ export default function AddHomePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { t, dir } = useLanguage();
-    const { getHomeByName, addHome, updateHome, loading, error } = useHomes();
+    const { getHomeById, addHome, updateHome, loading, error } = useHomes();
 
     const isEdit = searchParams.get('edit') === 'true';
-    const homeName = searchParams.get('name');
+    const homeId = searchParams.get('id');
 
     const [formData, setFormData] = useState({
         name: '',
@@ -34,13 +34,14 @@ export default function AddHomePage() {
         electricityCode: '',
         tenant: '',
         rent: '',
+        rentCurrency: CurrencyType.USD,
     });
 
     const [rentDuration, setRentDuration] = useState<RentDuration>('monthly');
     const [shareholders, setShareholders] = useState<Shareholder[]>([]);
     const [newShareholder, setNewShareholder] = useState('');
     const [newShareholderAmount, setNewShareholderAmount] = useState('');
-    const [isPercentage, setIsPercentage] = useState(true);
+    const [currency, setCurrency] = useState<CurrencyType>(CurrencyType.PERCENTAGE);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -49,10 +50,10 @@ export default function AddHomePage() {
     // Load data from database if in edit mode
     useEffect(() => {
         // Only run once on initial load when in edit mode and not loading
-        if (isEdit && homeName && !initializedRef.current && !loading) {
+        if (isEdit && homeId && !initializedRef.current && !loading) {
             initializedRef.current = true;
 
-            const home = getHomeByName(decodeURIComponent(homeName));
+            const home = getHomeById(homeId);
 
             if (home) {
                 setFormData({
@@ -61,13 +62,14 @@ export default function AddHomePage() {
                     electricityCode: home.electricityCode,
                     tenant: home.tenant,
                     rent: home.rent.toString(),
+                    rentCurrency: home.rentCurrency,
                 });
 
                 setRentDuration(home.rentDuration);
                 setShareholders([...home.shareholders]);
             }
         }
-    }, [isEdit, homeName, getHomeByName, loading]);
+    }, [isEdit, homeId, getHomeById, loading]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -83,7 +85,7 @@ export default function AddHomePage() {
                     {
                         name: newShareholder.trim(),
                         amount,
-                        isPercentage,
+                        currency,
                     },
                 ]);
                 setNewShareholder('');
@@ -102,8 +104,8 @@ export default function AddHomePage() {
                 if (i === index) {
                     return {
                         ...shareholder,
-                        isPercentage: !shareholder.isPercentage,
-                    };
+                        currency: toggleCurrency(shareholder.currency),
+                    } as Shareholder;
                 }
                 return shareholder;
             })
@@ -141,6 +143,7 @@ export default function AddHomePage() {
             }
 
             const homeData = {
+                id: isEdit ? homeId! : crypto.randomUUID(),
                 name: formData.name,
                 address: formData.address,
                 electricityCode: formData.electricityCode,
@@ -149,12 +152,11 @@ export default function AddHomePage() {
                 rentDuration,
                 shareholders,
                 electricityBills:
-                    isEdit && homeName
-                        ? getHomeByName(decodeURIComponent(homeName))?.electricityBills || []
-                        : [],
+                    isEdit && homeId ? getHomeById(homeId)?.electricityBills || [] : [],
+                rentCurrency: formData.rentCurrency as CurrencyType,
             };
 
-            if (isEdit && homeName) {
+            if (isEdit && homeId) {
                 await updateHome(homeData);
             } else {
                 await addHome(homeData);
@@ -331,12 +333,14 @@ export default function AddHomePage() {
                                             }}
                                         />
                                         <Toggle
-                                            pressed={isPercentage}
-                                            onPressedChange={setIsPercentage}
+                                            pressed={currency === CurrencyType.PERCENTAGE}
+                                            onPressedChange={() =>
+                                                setCurrency(toggleCurrency(currency))
+                                            }
                                             size="sm"
                                             aria-label="Toggle percentage"
                                         >
-                                            {isPercentage ? (
+                                            {currency === CurrencyType.PERCENTAGE ? (
                                                 <Percent className="h-4 w-4" />
                                             ) : (
                                                 <DollarSign className="h-4 w-4" />
@@ -378,7 +382,10 @@ export default function AddHomePage() {
                                                         className="w-20 h-8 text-xs"
                                                     />
                                                     <Toggle
-                                                        pressed={shareholder.isPercentage}
+                                                        pressed={
+                                                            shareholder.currency ===
+                                                            CurrencyType.PERCENTAGE
+                                                        }
                                                         onPressedChange={() =>
                                                             toggleShareholderType(index)
                                                         }
@@ -386,7 +393,8 @@ export default function AddHomePage() {
                                                         aria-label="Toggle percentage"
                                                         className="h-8"
                                                     >
-                                                        {shareholder.isPercentage ? (
+                                                        {shareholder.currency ===
+                                                        CurrencyType.PERCENTAGE ? (
                                                             <Percent className="h-3 w-3" />
                                                         ) : (
                                                             <DollarSign className="h-3 w-3" />

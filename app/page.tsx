@@ -47,7 +47,7 @@ export default function HomePage() {
             ) : (
                 <div className="grid gap-4">
                     {homes.map(home => (
-                        <HomeCard key={home.name} {...home} />
+                        <HomeCard key={home.id} {...home} />
                     ))}
                 </div>
             )}

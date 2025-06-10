@@ -37,24 +37,24 @@ import { OfflineBanner } from '@/components/shared/offline-banner';
 import { PageHeader } from '@/components/shared/page-header';
 import { useHomes } from '@/contexts/home-context';
 import { useLanguage } from '@/contexts/language-context';
-import { formatRent, formatShareholderAmount, type ElectricityBill } from '@/lib/data';
+import { formatPayment, type ElectricityBill } from '@/lib/data';
 
 export default function HomeDetailPage() {
     const params = useParams();
     const router = useRouter();
     const homeName = decodeURIComponent(params.name as string);
     const { t, dir } = useLanguage();
-    const { getHomeByName, deleteHome, addBillToHome, deleteBillFromHome, loading, error } =
+    const { getHomeById, deleteHome, addBillToHome, deleteBillFromHome, loading, error } =
         useHomes();
 
-    const [homeData, setHomeData] = useState<ReturnType<typeof getHomeByName>>(undefined);
+    const [homeData, setHomeData] = useState<ReturnType<typeof getHomeById>>(undefined);
     const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         if (!loading) {
-            setHomeData(getHomeByName(homeName));
+            setHomeData(getHomeById(homeName));
         }
-    }, [loading, homeName, getHomeByName]);
+    }, [loading, homeName, getHomeById]);
 
     const handleAddBill = async (bill: Omit<ElectricityBill, 'id'>) => {
         if (!homeData) return;
@@ -202,7 +202,7 @@ export default function HomeDetailPage() {
                                     <div>
                                         <p className="font-medium">{t('rent')}</p>
                                         <p className="text-sm text-muted-foreground">
-                                            {formatRent(homeData.rent)}
+                                            {formatPayment(homeData.rent, homeData.rentCurrency)}
                                         </p>
                                     </div>
                                     <Badge variant="outline" className="flex items-center gap-1">
@@ -239,7 +239,10 @@ export default function HomeDetailPage() {
                                                             variant="secondary"
                                                             className="text-xs bg-primary/10 text-primary border-primary/20"
                                                         >
-                                                            {formatShareholderAmount(shareholder)}
+                                                            {formatPayment(
+                                                                shareholder.amount,
+                                                                shareholder.currency
+                                                            )}
                                                         </Badge>
                                                     </div>
                                                 ))}

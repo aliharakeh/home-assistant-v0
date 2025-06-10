@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -8,58 +8,58 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { useLanguage } from '@/contexts/language-context'
-import type { ElectricityBill, SubscriptionType } from '@/lib/data'
-import type React from 'react'
-import { useState } from 'react'
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { useLanguage } from '@/contexts/language-context';
+import type { ElectricityBill, SubscriptionType } from '@/lib/data';
+import type React from 'react';
+import { useState } from 'react';
 
 interface AddBillDialogProps {
-    open: boolean
-    onOpenChange: (open: boolean) => void
-    onAddBill: (bill: Omit<ElectricityBill, 'id'>) => void
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onAddBill: (bill: Omit<ElectricityBill, 'id'>) => void;
 }
 
 export function AddBillDialog({ open, onOpenChange, onAddBill }: AddBillDialogProps) {
-    const { t } = useLanguage()
+    const { t } = useLanguage();
     const [formData, setFormData] = useState({
         amount: '',
         date: new Date().toISOString().split('T')[0],
         subscriptionType: 'main' as SubscriptionType,
         notes: '',
-    })
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handleSelectChange = (name: string, value: string) => {
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        const amount = Number.parseFloat(formData.amount)
-        if (isNaN(amount) || amount <= 0) return
+        const amount = Number.parseFloat(formData.amount);
+        if (isNaN(amount) || amount <= 0) return;
 
         onAddBill({
             amount,
             date: formData.date,
             subscriptionType: formData.subscriptionType,
             notes: formData.notes || undefined,
-        })
+        });
 
         // Reset form
         setFormData({
@@ -67,10 +67,10 @@ export function AddBillDialog({ open, onOpenChange, onAddBill }: AddBillDialogPr
             date: new Date().toISOString().split('T')[0],
             subscriptionType: 'main',
             notes: '',
-        })
+        });
 
-        onOpenChange(false)
-    }
+        onOpenChange(false);
+    };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -148,5 +148,5 @@ export function AddBillDialog({ open, onOpenChange, onAddBill }: AddBillDialogPr
                 </form>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
