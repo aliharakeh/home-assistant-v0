@@ -1,4 +1,4 @@
-export type Language = 'en' | 'ar'
+export type Language = 'en' | 'ar';
 
 export const translations = {
     en: {
@@ -52,7 +52,7 @@ export const translations = {
         enterElectricityCode: 'Enter electricity code',
         tenantName: 'Tenant Name',
         enterTenantName: 'Enter tenant name',
-        rentAmount: 'Rent Amount ($)',
+        rentAmount: 'Rent Amount',
         shareholderName: 'Shareholder name',
         amount: 'Amount',
         callTenant: 'Call Tenant',
@@ -189,7 +189,7 @@ export const translations = {
         enterElectricityCode: 'أدخل رمز الكهرباء',
         tenantName: 'اسم المستأجر',
         enterTenantName: 'أدخل اسم المستأجر',
-        rentAmount: 'مبلغ الإيجار ($)',
+        rentAmount: 'مبلغ الإيجار',
         shareholderName: 'اسم المساهم',
         amount: 'المبلغ',
         callTenant: 'اتصال بالمستأجر',
@@ -273,34 +273,37 @@ export const translations = {
         billsDeletedDescription:
             'تم حذف {count} {count, plural, one {فاتورة} other {فواتير}} بنجاح.',
     },
-}
+};
 
 export function getTranslation(lang: Language, key: string, params?: Record<string, any>): string {
-    const translation = translations[lang][key as keyof (typeof translations)[typeof lang]]
+    const translation = translations[lang][key as keyof (typeof translations)[typeof lang]];
 
-    if (!translation) return key
+    if (!translation) return key;
 
     if (params) {
         return Object.entries(params).reduce((acc, [key, value]) => {
             // Handle pluralization
             if (key === 'count' && typeof value === 'number') {
-                const pluralMatch = acc.match(new RegExp(`\\{${key}, plural, ([^}]+)\\}`))
+                const pluralMatch = acc.match(new RegExp(`\\{${key}, plural, ([^}]+)\\}`));
                 if (pluralMatch) {
-                    const options = pluralMatch[1].split(' ')
-                    const pluralForm = value === 1 ? 'one' : 'other'
+                    const options = pluralMatch[1].split(' ');
+                    const pluralForm = value === 1 ? 'one' : 'other';
                     const replacement = options
                         .find(opt => opt.startsWith(`${pluralForm} `))
                         ?.split(' ')
                         .slice(1)
                         .join(' ')
-                        .replace(/[{}]/g, '')
-                    return acc.replace(new RegExp(`\\{${key}, plural, [^}]+\\}`), replacement || '')
+                        .replace(/[{}]/g, '');
+                    return acc.replace(
+                        new RegExp(`\\{${key}, plural, [^}]+\\}`),
+                        replacement || ''
+                    );
                 }
             }
 
-            return acc.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value))
-        }, translation as string)
+            return acc.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
+        }, translation as string);
     }
 
-    return translation as string
+    return translation as string;
 }

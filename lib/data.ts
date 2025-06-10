@@ -19,7 +19,7 @@ export interface ElectricityBill {
 
 export enum CurrencyType {
     USD = '$',
-    LBP = 'LBP',
+    LBP = 'L.L.',
     PERCENTAGE = '%',
 }
 
@@ -170,10 +170,10 @@ export function getHomeByName(name: string): Home | undefined {
 export function formatPayment(rent: number, currency: CurrencyType, duration?: string): string {
     const formattedAmount =
         currency === CurrencyType.LBP
-            ? `${rent.toLocaleString()} LBP`
+            ? `${rent.toLocaleString()} ${CurrencyType.LBP}`
             : currency === CurrencyType.PERCENTAGE
-            ? `${rent}%`
-            : `$${rent}`;
+            ? `${rent}${CurrencyType.PERCENTAGE}`
+            : `${CurrencyType.USD}${rent}`;
 
     return duration ? `${formattedAmount} / ${duration}` : formattedAmount;
 }

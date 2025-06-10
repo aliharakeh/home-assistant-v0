@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
 import { useHomes } from '@/contexts/home-context';
@@ -273,36 +272,39 @@ export default function AddHomePage() {
                                     required
                                     className="flex-1"
                                 />
-                                <div className="flex items-center gap-2 border rounded-md p-2">
-                                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                                    <RadioGroup
-                                        dir={dir}
-                                        value={rentDuration}
-                                        onValueChange={value =>
-                                            setRentDuration(value as RentDuration)
-                                        }
-                                        className="flex gap-4"
-                                    >
-                                        <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="monthly" id="monthly" />
-                                            <Label
-                                                htmlFor="monthly"
-                                                className="text-sm cursor-pointer"
-                                            >
-                                                {t('monthly')}
-                                            </Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="yearly" id="yearly" />
-                                            <Label
-                                                htmlFor="yearly"
-                                                className="text-sm cursor-pointer"
-                                            >
-                                                {t('yearly')}
-                                            </Label>
-                                        </div>
-                                    </RadioGroup>
-                                </div>
+                                <Toggle
+                                    pressed={rentDuration === 'yearly'}
+                                    onPressedChange={() =>
+                                        setRentDuration(prev =>
+                                            prev === 'monthly' ? 'yearly' : 'monthly'
+                                        )
+                                    }
+                                    size="sm"
+                                    aria-label="Toggle rent duration"
+                                    className="flex items-center gap-1"
+                                >
+                                    <Calendar className="h-4 w-4" />
+                                    <span className="text-xs">{t(rentDuration)}</span>
+                                </Toggle>
+                                <Toggle
+                                    pressed={formData.rentCurrency === CurrencyType.PERCENTAGE}
+                                    onPressedChange={() =>
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            rentCurrency: toggleCurrency(prev.rentCurrency),
+                                        }))
+                                    }
+                                    size="sm"
+                                    aria-label="Toggle rent currency"
+                                >
+                                    {formData.rentCurrency === CurrencyType.PERCENTAGE ? (
+                                        <Percent className="h-4 w-4" />
+                                    ) : formData.rentCurrency === CurrencyType.USD ? (
+                                        <DollarSign className="h-4 w-4" />
+                                    ) : (
+                                        <span className="text-xs">{CurrencyType.LBP}</span>
+                                    )}
+                                </Toggle>
                             </div>
                         </div>
 
@@ -345,7 +347,7 @@ export default function AddHomePage() {
                                             ) : currency === CurrencyType.USD ? (
                                                 <DollarSign className="h-4 w-4" />
                                             ) : (
-                                                <span className="text-xs">LBP</span>
+                                                <span className="text-xs">{CurrencyType.LBP}</span>
                                             )}
                                         </Toggle>
                                     </div>
@@ -402,7 +404,9 @@ export default function AddHomePage() {
                                                           CurrencyType.USD ? (
                                                             <DollarSign className="h-3 w-3" />
                                                         ) : (
-                                                            <span className="text-xs">LBP</span>
+                                                            <span className="text-xs">
+                                                                {CurrencyType.LBP}
+                                                            </span>
                                                         )}
                                                     </Toggle>
                                                 </div>
