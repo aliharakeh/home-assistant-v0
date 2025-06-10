@@ -1,9 +1,9 @@
 'use client';
 
-import { HomeCard } from '@/components/home-card';
-import { OfflineBanner } from '@/components/offline-banner';
-import { PageHeader } from '@/components/page-header';
-import { PWAInstallPrompt } from '@/components/pwa-install-prompt';
+import { HomeCard } from '@/components/home/home-card';
+import { OfflineBanner } from '@/components/shared/offline-banner';
+import { PageHeader } from '@/components/shared/page-header';
+import { PWAInstallPrompt } from '@/components/shared/pwa-install-prompt';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

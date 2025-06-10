@@ -1,6 +1,6 @@
 'use client';
 
-import { LanguageSwitcher } from '@/components/language-switcher';
+import { LanguageSwitcher } from '@/components/shared/language-switcher';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/language-context';
 import { ArrowLeft, ArrowRight, PlusCircle } from 'lucide-react';

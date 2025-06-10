@@ -1,7 +1,7 @@
 'use client';
 
-import { OfflineBanner } from '@/components/offline-banner';
-import { PageHeader } from '@/components/page-header';
+import { OfflineBanner } from '@/components/shared/offline-banner';
+import { PageHeader } from '@/components/shared/page-header';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
