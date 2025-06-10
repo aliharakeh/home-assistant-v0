@@ -338,12 +338,14 @@ export default function AddHomePage() {
                                                 setCurrency(toggleCurrency(currency))
                                             }
                                             size="sm"
-                                            aria-label="Toggle percentage"
+                                            aria-label="Toggle currency"
                                         >
                                             {currency === CurrencyType.PERCENTAGE ? (
                                                 <Percent className="h-4 w-4" />
-                                            ) : (
+                                            ) : currency === CurrencyType.USD ? (
                                                 <DollarSign className="h-4 w-4" />
+                                            ) : (
+                                                <span className="text-xs">LBP</span>
                                             )}
                                         </Toggle>
                                     </div>
@@ -390,14 +392,17 @@ export default function AddHomePage() {
                                                             toggleShareholderType(index)
                                                         }
                                                         size="sm"
-                                                        aria-label="Toggle percentage"
+                                                        aria-label="Toggle currency"
                                                         className="h-8"
                                                     >
                                                         {shareholder.currency ===
                                                         CurrencyType.PERCENTAGE ? (
                                                             <Percent className="h-3 w-3" />
-                                                        ) : (
+                                                        ) : shareholder.currency ===
+                                                          CurrencyType.USD ? (
                                                             <DollarSign className="h-3 w-3" />
+                                                        ) : (
+                                                            <span className="text-xs">LBP</span>
                                                         )}
                                                     </Toggle>
                                                 </div>
