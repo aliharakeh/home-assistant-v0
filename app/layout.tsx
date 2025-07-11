@@ -1,10 +1,11 @@
-import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
-import type React from 'react'
-import './globals.css'
-import { Providers } from './providers'
+import { PWAInstallPrompt } from '@/components/shared/pwa-install-prompt';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import type React from 'react';
+import './globals.css';
+import { Providers } from './providers';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
     title: 'Home Assistant',
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
         telephone: true,
     },
     generator: 'v0.dev',
-}
+};
 
 export const viewport: Viewport = {
     themeColor: '#3b82f6',
@@ -27,12 +28,12 @@ export const viewport: Viewport = {
     initialScale: 1,
     maximumScale: 1,
     userScalable: false,
-}
+};
 
 export default function RootLayout({
     children,
 }: Readonly<{
-    children: React.ReactNode
+    children: React.ReactNode;
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
@@ -44,8 +45,9 @@ export default function RootLayout({
             <body className={inter.className}>
                 <Providers>
                     <main className="min-h-screen bg-background">{children}</main>
+                    <PWAInstallPrompt />
                 </Providers>
             </body>
         </html>
-    )
+    );
 }

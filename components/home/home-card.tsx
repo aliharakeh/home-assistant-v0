@@ -93,7 +93,7 @@ export function HomeCard({
                 <Button variant="ghost" size="sm" onClick={() => setExpanded(!expanded)}>
                     {expanded ? t('showLess') : t('showMore')}
                 </Button>
-                <Link href={`/home/${id}`}>
+                <Link href={`/home?id=${id}`}>
                     <Button variant="ghost" size="sm" className="gap-1">
                         {t('details')}
                         {dir === 'rtl' ? (

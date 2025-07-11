@@ -16,9 +16,9 @@ import { AlertCircle, Calendar, DollarSign, Percent, Plus, X } from 'lucide-reac
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 
-export default function AddHomePage() {
+function AddHomeContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { t, dir } = useLanguage();
@@ -63,12 +63,11 @@ export default function AddHomePage() {
                     rent: home.rent.toString(),
                     rentCurrency: home.rentCurrency,
                 });
-
                 setRentDuration(home.rentDuration);
                 setShareholders([...home.shareholders]);
             }
         }
-    }, [isEdit, homeId, getHomeById, loading]);
+    }, [isEdit, homeId, loading]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -223,7 +222,6 @@ export default function AddHomePage() {
                                 value={formData.name}
                                 onChange={handleInputChange}
                                 required
-                                disabled={isEdit} // Don't allow changing the name in edit mode as it's the primary key
                             />
                         </div>
 
@@ -435,5 +433,22 @@ export default function AddHomePage() {
 
             <OfflineBanner />
         </div>
+    );
+}
+
+export default function AddHomePage() {
+    const { dir } = useLanguage();
+
+    return (
+        <Suspense
+            fallback={
+                <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
+                    <PageHeader showBackButton={true} backHref="/" />
+                    <Skeleton className="h-[600px] w-full rounded-lg" />
+                </div>
+            }
+        >
+            <AddHomeContent />
+        </Suspense>
     );
 }

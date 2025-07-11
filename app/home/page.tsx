@@ -29,8 +29,8 @@ import {
     Zap,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
 
 import { ElectricityBillsDashboard } from '@/components/electricity-bills/electricity-bills-dashboard';
 import { OfflineBanner } from '@/components/shared/offline-banner';
@@ -39,11 +39,11 @@ import { useHomes } from '@/contexts/home-context';
 import { useLanguage } from '@/contexts/language-context';
 import { formatPayment, type ElectricityBill } from '@/lib/data';
 
-export default function HomeDetailPage() {
-    const params = useParams();
+function HomeDetailContent() {
+    const searchParams = useSearchParams();
     const router = useRouter();
-    const homeName = decodeURIComponent(params.name as string);
     const { t, dir } = useLanguage();
+    const homeId = decodeURIComponent(searchParams.get('id') || '');
     const { getHomeById, deleteHome, addBillToHome, deleteBillFromHome, loading, error } =
         useHomes();
 
@@ -52,9 +52,9 @@ export default function HomeDetailPage() {
 
     useEffect(() => {
         if (!loading) {
-            setHomeData(getHomeById(homeName));
+            setHomeData(getHomeById(homeId));
         }
-    }, [loading, homeName, getHomeById]);
+    }, [loading, homeId, getHomeById]);
 
     const handleAddBill = async (bill: Omit<ElectricityBill, 'id'>) => {
         if (!homeData) return;
@@ -148,11 +148,7 @@ export default function HomeDetailPage() {
                                     <Home className="h-5 w-5" />
                                     {homeData.name}
                                 </CardTitle>
-                                <Link
-                                    href={`/add-home?edit=true&name=${encodeURIComponent(
-                                        homeData.name
-                                    )}`}
-                                >
+                                <Link href={`/add-home?edit=true&id=${homeData.id}`}>
                                     <Button variant="outline" size="icon">
                                         <Edit className="h-4 w-4" />
                                     </Button>
@@ -297,5 +293,22 @@ export default function HomeDetailPage() {
 
             <OfflineBanner />
         </div>
+    );
+}
+
+export default function HomeDetailPage() {
+    const { dir } = useLanguage();
+
+    return (
+        <Suspense
+            fallback={
+                <div className="container max-w-md mx-auto px-4 py-6" dir={dir}>
+                    <PageHeader showBackButton={true} backHref="/" />
+                    <Skeleton className="h-[500px] w-full rounded-lg" />
+                </div>
+            }
+        >
+            <HomeDetailContent />
+        </Suspense>
     );
 }

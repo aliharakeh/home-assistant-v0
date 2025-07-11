@@ -1,98 +1,89 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/ui/button'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
-import { useLanguage } from '@/contexts/language-context'
-import { Download } from 'lucide-react'
-import { useEffect, useState } from 'react'
-
-interface BeforeInstallPromptEvent extends Event {
-    prompt: () => Promise<void>
-    userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
-}
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function PWAInstallPrompt() {
-    const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
-    const [showPrompt, setShowPrompt] = useState(false)
-    const { t } = useLanguage()
+    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+    const [isInstalled, setIsInstalled] = useState(false);
 
     useEffect(() => {
-        const handler = (e: Event) => {
-            e.preventDefault()
-            const now = new Date().getTime()
-            const lastPromptTime = localStorage.getItem('lastPwaInstallPromptTime')
-            const oneHour = 60 * 60 * 1000
+        // Handle PWA install prompt
+        const handleBeforeInstallPrompt = (e: Event) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+            setShowInstallPrompt(true);
+        };
 
-            if (!lastPromptTime || now - parseInt(lastPromptTime, 10) > oneHour) {
-                setInstallPrompt(e as BeforeInstallPromptEvent)
-                setShowPrompt(true)
-                localStorage.setItem('lastPwaInstallPromptTime', now.toString())
-            }
-        }
+        const handleAppInstalled = () => {
+            setIsInstalled(true);
+            setShowInstallPrompt(false);
+        };
 
-        // Check if running in standalone mode (app installed)
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-        if (!isStandalone) {
-            window.addEventListener('beforeinstallprompt', handler)
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.addEventListener('appinstalled', handleAppInstalled);
+
+        // Check if app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            setIsInstalled(true);
         }
 
         return () => {
-            if (!isStandalone) {
-                window.removeEventListener('beforeinstallprompt', handler)
-            }
-        }
-    }, [])
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            window.removeEventListener('appinstalled', handleAppInstalled);
+        };
+    }, []);
 
-    const onInstall = async () => {
-        if (!installPrompt) return
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
 
-        installPrompt.prompt()
-        const { outcome } = await installPrompt.userChoice
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
 
         if (outcome === 'accepted') {
-            setInstallPrompt(null)
-            setShowPrompt(false)
+            console.log('User accepted the install prompt');
+        } else {
+            console.log('User dismissed the install prompt');
         }
+
+        setDeferredPrompt(null);
+        setShowInstallPrompt(false);
+    };
+
+    const handleDismiss = () => {
+        setShowInstallPrompt(false);
+    };
+
+    if (isInstalled || !showInstallPrompt) {
+        return null;
     }
 
-    if (!showPrompt) return null
-
     return (
-        <Dialog open={showPrompt} onOpenChange={setShowPrompt}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{t('installApp')}</DialogTitle>
-                    <DialogDescription>{t('installAppDescription')}</DialogDescription>
-                </DialogHeader>
-                <div className="flex justify-center py-4">
-                    <div className="flex flex-col items-center">
-                        <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-2">
-                            <img
-                                src="/icons/icon-192x192.png"
-                                alt="App Icon"
-                                className="w-12 h-12"
-                            />
-                        </div>
-                        <span className="text-sm font-medium">Home Assistant</span>
-                    </div>
+        <Card className="fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto shadow-lg">
+            <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm">Install Home Assistant</CardTitle>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleDismiss}
+                        className="h-6 w-6 p-0"
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
                 </div>
-                <DialogFooter className="flex sm:justify-between">
-                    <Button variant="outline" onClick={() => setShowPrompt(false)}>
-                        {t('notNow')}
-                    </Button>
-                    <Button onClick={onInstall} className="gap-2">
-                        <Download className="h-4 w-4" />
-                        {t('install')}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
+                <CardDescription className="text-xs">
+                    Install this app on your device for quick and easy access when you're on the go.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+                <Button onClick={handleInstallClick} className="w-full">
+                    Install App
+                </Button>
+            </CardContent>
+        </Card>
+    );
 }
