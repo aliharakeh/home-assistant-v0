@@ -20,6 +20,9 @@ const serwist = new Serwist({
     clientsClaim: true,
     navigationPreload: true,
     runtimeCaching: defaultCache,
+    precacheOptions: {
+        ignoreURLParametersMatching: [/.*/],
+    },
 });
 
 serwist.addEventListeners();

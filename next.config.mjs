@@ -6,17 +6,17 @@ const withSerwist = withSerwistInit({
     swDest: 'public/sw.js',
 });
 
-export default withSerwist(
-    /** @type {import('next').NextConfig} */
-    {
-        eslint: {
-            ignoreDuringBuilds: true,
-        },
-        typescript: {
-            ignoreBuildErrors: true,
-        },
-        images: {
-            unoptimized: true,
-        },
-    }
-);
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    images: {
+        unoptimized: true,
+    },
+};
+
+export default withSerwist(nextConfig);
